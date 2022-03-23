@@ -83,3 +83,7 @@ iOSInjectionProject/
 
 
 # /fastlane/.env
+
+# Auto Gen Scene
+# ignore Auto Generated Scene Folder 
+GenerateScene

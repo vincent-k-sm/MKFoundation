@@ -1,6 +1,13 @@
-public struct mk_foundation {
-    public private(set) var text = "Hello, World!"
-
+public struct MKFoundation {
+    
     public init() {
+        
     }
+    public static var debugEnabled = false {
+        willSet {
+            SystemUtils.shared.debugEnabled = newValue
+        }
+    }
+
+    
 }
