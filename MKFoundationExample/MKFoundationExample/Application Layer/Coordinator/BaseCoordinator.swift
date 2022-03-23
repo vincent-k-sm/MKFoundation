@@ -351,23 +351,24 @@ extension Coordinator {
             
             window.addSubview(controller.view)
 
-            UIView.animate(withDuration: options.duration.rawValue,
-                           animations: {
-                            controller.view.frame = (currentRoot?.view.frame)!
-                            currentRoot?.view.frame = nextFrame!
-                            
-                           }, completion: { (_) in
-                            
-                            let nav = UINavigationController(rootViewController: controller)
-                            
-                            window.rootViewController = nav
-//                            controller.navigationController?.setNavigationBarHidden(false, animated: false)
-                            controller.navigationController?.interactivePopGestureRecognizer!.delegate = controller as? UIGestureRecognizerDelegate
-                            controller.navigationController?.interactivePopGestureRecognizer!.isEnabled = true
-                            controller.view.clipsToBounds = true
-//                            nav.navigationBar.isHidden = setNavHidden
-                            
-                           })
+            UIView.animate(
+                withDuration: options.duration.rawValue,
+                animations: {
+                    controller.view.frame = (currentRoot?.view.frame)!
+                    currentRoot?.view.frame = nextFrame!
+                    
+                }, completion: { (_) in
+                    
+                    let nav = UINavigationController(rootViewController: controller)
+                    
+                    window.rootViewController = nav
+                    //                            controller.navigationController?.setNavigationBarHidden(false, animated: false)
+                    controller.navigationController?.interactivePopGestureRecognizer!.delegate = controller as? UIGestureRecognizerDelegate
+                    controller.navigationController?.interactivePopGestureRecognizer!.isEnabled = true
+                    controller.view.clipsToBounds = true
+                    //                            nav.navigationBar.isHidden = setNavHidden
+                    
+                })
         
         }
         else {
