@@ -45,7 +45,7 @@ public extension ButtonTypes {
                 defaultTitleColor: .white,
                 disableTitleColor: .white,
                 defaultColor: .black,
-                highlightColor: .grey900,
+                highlightColor: .text_secondary,
                 disableColor: .grey200
             )
             return model

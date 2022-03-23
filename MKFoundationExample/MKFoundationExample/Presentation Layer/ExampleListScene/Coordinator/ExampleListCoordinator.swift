@@ -74,7 +74,12 @@ protocol ExampleListCoordinatorAction {
 
 extension ExampleListCoordinator: ExampleListCoordinatorAction {
     func moveToFoundationList(type: FoundationTypes) {
-        print(type.title)
+        switch type {
+            case .buttons:
+                let impl = ButtonListCoordinatorImplementation()
+                self.coordinate(to: .buttonList(impl))
+        }
+        
     }
     
     
