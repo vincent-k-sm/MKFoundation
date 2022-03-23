@@ -1,12 +1,25 @@
 // 
-// ExampleListViewController.swift
+// ButtonListViewController.swift
 // 
 
+import Combine
 import UIKit
 import MKFoundation
 import SnapKit
 
-class ExampleListViewController: BaseViewController<ExampleListViewModel> {
+class ButtonListViewController: BaseViewController<ButtonListViewModel> {
+    var cancelables: Set<AnyCancellable> = []
+    var isOutLine: Bool = false
+    
+    lazy var navRightButton: UIButton = {
+        let v = UIButton(type: .custom)
+        v.setImage(UIImage(systemName: "square.slash"), for: .normal)
+        v.setImage(UIImage(systemName: "square"), for: .selected)
+        v.tintColor = UIColor.setColorSet(.text_secondary)
+        
+        v.sizeToFit()
+        return v
+    }()
     
     lazy var tableView: UITableView = {
         let v = UITableView()
@@ -17,7 +30,7 @@ class ExampleListViewController: BaseViewController<ExampleListViewModel> {
         v.rowHeight = UITableView.automaticDimension
         v.separatorStyle = .singleLine
         v.removeEventDelay()
-        v.registerCell(type: ExampleListCell.self)
+        v.registerCell(type: ButtonCell.self)
         
         v.delegate = self
         return v
@@ -38,7 +51,7 @@ class ExampleListViewController: BaseViewController<ExampleListViewModel> {
     }
 }
 
-extension ExampleListViewController {
+extension ButtonListViewController {
     private func setUI() {
         self.view.backgroundColor = UIColor.setColorSet(.background)
         
@@ -70,23 +83,47 @@ extension ExampleListViewController {
         self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: tintColor]
         
         self.title = Appearance.title
-        self.navigationItem.backButtonTitle = "뒤로"
+        
+        self.setNavigationBarButton()
+    
     }
     
+    private func setNavigationBarButton() {
+        self.navRightButton.publisher(for: .touchUpInside)
+            .sink(receiveValue: { [weak self] _ in
+                guard let self = self else { return }
+                self.rightButtonTapped()
+            })
+            .store(in: &self.cancelables)
+        
+        let rightButton = UIBarButtonItem(customView: self.navRightButton)
+        self.navigationItem.rightBarButtonItems = [rightButton]
+    }
+    
+    private func rightButtonTapped() {
+        self.isOutLine.toggle()
+        self.tableView.reloadData()
+    }
 }
 
-extension ExampleListViewController {
+extension ButtonListViewController {
     private func bindViewModel() {
-        self.viewModel.dataSource = ExampleListDiffableDataSource(
+        self.viewModel.dataSource = ButtonListDiffableDataSource(
             tableView: self.tableView,
             cellProvider: { [weak self] (tableView, _, item) in
                 guard let self = self else { return UITableViewCell() }
                 let cell: UITableViewCell
-                let customCell = self.tableView.dequeueCell(withType: ExampleListCell.self) as! ExampleListCell
+                let customCell = self.tableView.dequeueCell(withType: ButtonCell.self) as! ButtonCell
                 
                 switch item {
-                    case let .item(foundation):
-                        customCell.titleLabel.text = foundation.title
+                    case let .item(buttonType):
+                        customCell.mkButton
+                            .setButtonLayout(
+                                title: "\(buttonType.self)",
+                                size: .medium,
+                                primaryType: buttonType,
+                                outline: self.isOutLine
+                            )
                 }
                 cell = customCell
                 
@@ -95,26 +132,25 @@ extension ExampleListViewController {
     }
 }
 
-extension ExampleListViewController {
+extension ButtonListViewController {
     private func bindEvent() {
 
     }
 }
 
-extension ExampleListViewController: UITableViewDelegate {
+extension ButtonListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let item = self.viewModel.dataSource.itemIdentifier(for: indexPath) else {
+        guard let _ = self.viewModel.dataSource.itemIdentifier(for: indexPath) else {
             return
         }
         self.tableView.deselectRow(at: indexPath, animated: true)
-        
-        self.viewModel.didSelectedItem.send(item)
     }
 }
 
 
-extension ExampleListViewController {
+
+extension ButtonListViewController {
     private struct Appearance {
-        static let title = "MK Foundation"
+        static let title = "Buttons"
     }
 }

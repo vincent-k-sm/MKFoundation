@@ -3,6 +3,7 @@
 // 
 
 import Foundation
+import UIKit
 
 struct ExampleListCoordinatorImplementation {
     
@@ -30,13 +31,20 @@ class ExampleListCoordinator: BaseCoordinator {
     
     override func setActions() {
         self.actions = ExampleListViewModelAction(
+            moveToFoundationList: self.moveToFoundationList(type:)
         )
     }
     
     override func start() {
         let vc = self.createViewController(input: self.inputs, actions: self.actions)
-        self.setRootNavVC(vc)
+        let options = TransitionOptions(
+            direction: .fade,
+            style: .easeIn,
+            duration: .main
+        )
 
+        let nav = UINavigationController(rootViewController: vc)
+        self.setRootVC(nav, options: options)
     }
 
 }
@@ -61,9 +69,19 @@ extension ExampleListCoordinator: ExampleListCoordinatorInjection {
 
 protocol ExampleListCoordinatorAction {
     // MARK: Make Actions
+    func moveToFoundationList(type: FoundationTypes)
 }
 
 extension ExampleListCoordinator: ExampleListCoordinatorAction {
+    func moveToFoundationList(type: FoundationTypes) {
+        switch type {
+            case .buttons:
+                let impl = ButtonListCoordinatorImplementation()
+                self.coordinate(to: .buttonList(impl))
+        }
+        
+    }
+    
     
 }
 
