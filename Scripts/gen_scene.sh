@@ -1,7 +1,14 @@
 
 cd ../
+# 최종적으로 생성된 파일이 위치할 폴더 명
+LAYER_FOLDER="Presentation Layer"
+echo "Searching $LAYER_FOLDER Folder .."
+RESULT_PATH="$(find $PWD -type d -name "$LAYER_FOLDER")"
+echo $RESULT_PATH
 
+# Root 에 자동으로 생성되는 폴더
 ROOT_FOLDER="GenerateScene"
+
 echo ""
 echo ""
 echo "Checking gitignore "
@@ -299,8 +306,21 @@ echo "Finish - Generate ${COORDINATOR_FILE} .."
 echo ""
 echo ""
 cd ..
-echo "Open Generated Scene Folder .."
-open .
-echo "[Finished]========================================"
 
+
+
+CURRENT_PATH="$(find $PWD -type d -name "$SCENE_FOLDER")"
+echo $CURRENT_PATH
+echo "Copying $SCENE_FOLDER Scene to $LAYER_FOLDER Folder .."
+sudo mv -v "$CURRENT_PATH" "$RESULT_PATH/"
+
+echo " "
+echo "Open $LAYER_FOLDER Folder "
+cd "$RESULT_PATH"
+open .
+
+echo " "
+echo " "
+echo "[Finished]========================================"
+echo "Add Generated Scene to .xcodeproj "
 
