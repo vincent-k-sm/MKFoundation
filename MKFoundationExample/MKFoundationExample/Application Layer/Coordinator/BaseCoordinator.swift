@@ -21,7 +21,7 @@ class BaseCoordinator: Coordinator {
     }
     
     deinit {
-        print("deinit")
+        print("BaseCoordinator - deinit")
     }
     
     func start() {
