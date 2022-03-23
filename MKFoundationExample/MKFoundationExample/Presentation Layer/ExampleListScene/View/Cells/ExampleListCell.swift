@@ -20,6 +20,14 @@ class ExampleListCell: UITableViewCell {
         return v
     }()
     
+    lazy var arrowImage: UIImageView = {
+        let v = UIImageView()
+        let image = UIImage(systemName: "arrow.right")?.withRenderingMode(.alwaysTemplate)
+        v.image = image
+        v.tintColor = UIColor.setColorSet(.text_primary)
+        return v
+    }()
+    
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -43,12 +51,19 @@ class ExampleListCell: UITableViewCell {
 extension ExampleListCell {
     private func setUI() {
         self.backgroundColor = .clear
-        self.contentView.backgroundColor = .clear
+        
         self.contentView.addSubview(self.titleLabel)
         
         self.titleLabel.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview().inset(20)
             make.left.right.equalToSuperview().inset(20)
+        }
+        
+        
+        self.contentView.addSubview(self.arrowImage)
+        self.arrowImage.snp.makeConstraints { make in
+            make.right.equalToSuperview().inset(20)
+            make.centerY.equalToSuperview()
         }
     }
 }
