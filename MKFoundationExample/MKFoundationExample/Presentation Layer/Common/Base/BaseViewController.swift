@@ -60,7 +60,7 @@ class BaseViewController<U>: UIViewController, BaseViewControllerProtocol, UIScr
     }
     
     deinit {
-        print("\(self) ---- deinit")
+        print("\(self) - deinit")
     }
     
   

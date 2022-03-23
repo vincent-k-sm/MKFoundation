@@ -22,15 +22,14 @@ class AppCoordinator: BaseCoordinator {
     }
     
     override func start() {
-        self.moveToSplashViewController()
+        self.moveToRootViewController()
     }
 
 }
 
 extension AppCoordinator {
-    private func moveToSplashViewController() {
-//        let impl = SplashCoordinatorImplementaion()
-//        self.coordinate(to: .splash(impl))
-        
+    private func moveToRootViewController() {
+        let impl = ExampleListCoordinatorImplementation()
+        self.coordinate(to: .exampleList(impl))
     }
 }
