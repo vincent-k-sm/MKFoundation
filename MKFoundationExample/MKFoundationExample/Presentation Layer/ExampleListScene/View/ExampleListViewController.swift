@@ -57,7 +57,6 @@ extension ExampleListViewController {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithDefaultBackground()
         appearance.backgroundColor = color
-//        appearance.shadowColor = .clear
         appearance.titleTextAttributes = [.foregroundColor: tintColor]
         
         self.navigationController?.navigationBar.tintColor = tintColor
