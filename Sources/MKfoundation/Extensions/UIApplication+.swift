@@ -7,7 +7,8 @@ import Foundation
 import UIKit
 
 public extension UIApplication {
-
+    
+    /// [MKFoundation]
     class func topViewController(base: UIViewController? = UIWindow.key?.rootViewController) -> UIViewController? {
 
         if let nav = base as? UINavigationController {
@@ -24,6 +25,7 @@ public extension UIApplication {
         return base
     }
     
+    /// [MKFoundation]
     func clearLaunchScreenCache() {
         do {
             try FileManager.default.removeItem(atPath: NSHomeDirectory()+"/Library/SplashBoard")

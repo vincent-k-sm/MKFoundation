@@ -5,6 +5,7 @@
 import UIKit
 
 public extension UIButton {
+    /// [MKFoundation]
     /// 버튼 배경 색 설정
     func setBackgroundColor(_ color: UIColor, for state: UIControl.State) {
         UIGraphicsBeginImageContext(CGSize(width: 1.0, height: 1.0))
@@ -18,7 +19,7 @@ public extension UIButton {
         self.setBackgroundImage(backgroundImage, for: state)
     }
 
-    
+    /// [MKFoundation]
     /// 버튼에 들어가는 이미지와 타이틀 간 간격 조정
     func alignTextBelow(spacing: CGFloat = 2.0) {
         guard let image = self.imageView?.image else {
@@ -44,7 +45,7 @@ public extension UIButton {
 
 
 public extension UIButton {
-    
+    /// [MKFoundation]
     /// set Button Layout으로 지정 한 Button에 대해 Title만 갱신할 수 있는 기능
     func updateTitleText(
         text: String,
@@ -60,6 +61,7 @@ public extension UIButton {
         }
     }
     
+    /// [MKFoundation]
     /// Button Type에 따른 레이아웃 강제 조정
     func setButtonLayout(
         title: String = "",
@@ -130,6 +132,7 @@ public extension UIButton {
 
 public extension UIButton {
     
+    /// [MKFoundation]
     /// 버튼 타이틀 지정
     func setTitle(text: String,
                   color: Colors,

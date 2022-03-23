@@ -7,6 +7,8 @@ import Foundation
 import UIKit
 
 public extension UIWindow {
+    
+    /// [MKFoundation]
     static var key: UIWindow? {
         
         if #available(iOS 13, *) {
