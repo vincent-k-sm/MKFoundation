@@ -111,21 +111,12 @@ public extension UIButton {
         }
         
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.heightAnchor.constraint(equalToConstant: buttonHeight).isActive = true
-        //        constraints.forEach { (constraint) in
-        //            if constraint.firstAttribute == .height {
-        //                constraint.constant = buttonHeight
-        //            }
-        //            else {
-        //                NSLayoutConstraint.activate([
-        //                    self.heightAnchor.constraint(equalToConstant: buttonHeight)
-        //                ])
-        //
-        //            }
-        //        }
-        //        self.layoutIfNeeded()
-        //        self.setNeedsLayout()
-        
+        if let heightConst = self.constraints.filter({ $0.firstAttribute == .height }).first {
+            heightConst.constant = buttonHeight
+        }
+        else {
+            self.heightAnchor.constraint(equalToConstant: buttonHeight).isActive = true
+        }
     }
     
 }

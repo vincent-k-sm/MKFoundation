@@ -1,5 +1,5 @@
 // 
-// ButtonListViewController.swift
+// SelectBoxListViewController.swift
 // 
 
 import Combine
@@ -7,15 +7,15 @@ import UIKit
 import MKFoundation
 import SnapKit
 
-class ButtonListViewController: BaseViewController<ButtonListViewModel> {
-    
+class SelectBoxListViewController: BaseViewController<SelectBoxListViewModel> {
+
     var cancelables: Set<AnyCancellable> = []
     var isOutLine: Bool = false
     
     lazy var navRightButton: UIButton = {
         let v = UIButton(type: .custom)
         v.setImage(UIImage(systemName: "square.slash"), for: .normal)
-        v.setImage(UIImage(systemName: "square"), for: .selected)
+        v.setImage(UIImage(systemName: "square.fill"), for: .selected)
         v.tintColor = UIColor.setColorSet(.text_secondary)
         
         v.sizeToFit()
@@ -31,15 +31,14 @@ class ButtonListViewController: BaseViewController<ButtonListViewModel> {
         v.rowHeight = UITableView.automaticDimension
         v.separatorStyle = .singleLine
         v.removeEventDelay()
-        v.registerCell(type: ButtonCell.self)
-        
+        v.registerCell(type: SelectBoxListCell.self)
+        v.registerCell(type: SelectBoxListHeaderView.self)
         v.delegate = self
         return v
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("\(self) - viewDidLoad")
         self.setUI()
         self.bindViewModel()
         self.viewModel.viewDidLoad()
@@ -52,7 +51,7 @@ class ButtonListViewController: BaseViewController<ButtonListViewModel> {
     }
 }
 
-extension ButtonListViewController {
+extension SelectBoxListViewController {
     private func setUI() {
         self.view.backgroundColor = UIColor.setColorSet(.background)
         
@@ -107,24 +106,23 @@ extension ButtonListViewController {
     }
 }
 
-extension ButtonListViewController {
+extension SelectBoxListViewController {
     private func bindViewModel() {
-        self.viewModel.dataSource = ButtonListDiffableDataSource(
+        self.viewModel.dataSource = SelectBoxListDiffableDataSource(
             tableView: self.tableView,
             cellProvider: { [weak self] (tableView, _, item) in
                 guard let self = self else { return UITableViewCell() }
                 let cell: UITableViewCell
-                let customCell = self.tableView.dequeueCell(withType: ButtonCell.self) as! ButtonCell
+                let customCell = self.tableView.dequeueCell(withType: SelectBoxListCell.self) as! SelectBoxListCell
                 
                 switch item {
-                    case let .item(buttonType):
-                        customCell.mkButton
-                            .setButtonLayout(
-                                title: "\(buttonType.self)",
-                                size: .medium,
-                                primaryType: buttonType,
-                                outline: self.isOutLine
-                            )
+                    case let .item(option, status):
+                        var op = option
+                        op.inputType = self.isOutLine ? .outLine : .fill
+                        
+                        customCell.mkSelectBox.configure(option: op)
+                        
+                        customCell.mkSelectBox.setSelectboxStatus(status: status)
                 }
                 cell = customCell
                 
@@ -133,13 +131,22 @@ extension ButtonListViewController {
     }
 }
 
-extension ButtonListViewController {
+extension SelectBoxListViewController {
     private func bindEvent() {
 
     }
 }
 
-extension ButtonListViewController: UITableViewDelegate {
+extension SelectBoxListViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view: UIView?
+        guard let section = SelectBoxStatus(rawValue: section) else { return UIView() }
+        let customView = self.tableView.dequeueCell(withType: SelectBoxListHeaderView.self) as! SelectBoxListHeaderView
+        customView.titleLabel.text = "\(section.self)"
+        view = customView
+        return view
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let _ = self.viewModel.dataSource.itemIdentifier(for: indexPath) else {
             return
@@ -148,10 +155,8 @@ extension ButtonListViewController: UITableViewDelegate {
     }
 }
 
-
-
-extension ButtonListViewController {
+extension SelectBoxListViewController {
     private struct Appearance {
-        static let title = "Buttons"
+        static let title = "Select Box"
     }
 }

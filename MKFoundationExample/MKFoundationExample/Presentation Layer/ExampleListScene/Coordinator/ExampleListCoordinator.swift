@@ -78,6 +78,10 @@ extension ExampleListCoordinator: ExampleListCoordinatorAction {
             case .buttons:
                 let impl = ButtonListCoordinatorImplementation()
                 self.coordinate(to: .buttonList(impl))
+                
+            case .selectBox:
+                let impl = SelectBoxListCoordinatorImplementation()
+                self.coordinate(to: .selectBoxList(impl))
         }
         
     }
