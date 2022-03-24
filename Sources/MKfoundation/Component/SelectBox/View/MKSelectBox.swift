@@ -327,20 +327,13 @@ extension MKSelectBox {
             self.bottomAreaContentView.isHidden = true
         }
         
-//        self.constraints.forEach { (constraint) in
-//            if constraint.firstAttribute == .height {
-//                constraint.constant = expectHeight
-//            }
-//            else {
-//                NSLayoutConstraint.activate([
-//                    self.heightAnchor.constraint(equalToConstant: expectHeight)
-//                ])
-//
-//            }
-//        }
-        
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.heightAnchor.constraint(equalToConstant: expectHeight).isActive = true
+        if let heightConst = self.constraints.filter({ $0.firstAttribute == .height }).first {
+            heightConst.constant = expectHeight
+        }
+        else {
+            self.heightAnchor.constraint(equalToConstant: expectHeight).isActive = true
+        }
         
         if self.viewHeight != expectHeight {
             self.updateTableViewHeight()
@@ -389,16 +382,13 @@ extension MKSelectBox {
         self.addSubview(self.rootStackView)
         self.rootStackView.translatesAutoresizingMaskIntoConstraints = false
         let rootStackConstraints = [
-            rootStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
-            rootStackView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0),
-            rootStackView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0),
-            rootStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0)
+            rootStackView.topAnchor.constraint(equalTo: rootStackView.superview!.topAnchor, constant: 0),
+            rootStackView.leftAnchor.constraint(equalTo: rootStackView.superview!.leftAnchor, constant: 0),
+            rootStackView.rightAnchor.constraint(equalTo: rootStackView.superview!.rightAnchor, constant: 0),
+            rootStackView.bottomAnchor.constraint(equalTo: rootStackView.superview!.bottomAnchor, constant: 0)
         ]
         NSLayoutConstraint.activate(rootStackConstraints)
         
-//        self.rootStackView.snp.makeConstraints { make in
-//            make.top.left.right.bottom.equalToSuperview().offset(0)
-//        }
         
         self.topAreaContentView.translatesAutoresizingMaskIntoConstraints = false
         let topAreaContentViewConstraints = [
@@ -406,39 +396,24 @@ extension MKSelectBox {
         ]
         NSLayoutConstraint.activate(topAreaContentViewConstraints)
         
-//        self.topAreaContentView.snp.makeConstraints { make in
-//            make.height.equalTo(20)
-//        }
-        
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
         let titleLabelConstraints = [
             titleLabel.topAnchor.constraint(equalTo: titleLabel.superview!.topAnchor, constant: 0),
-            titleLabel.rightAnchor.constraint(equalTo: titleLabel.superview!.rightAnchor, constant: 0),
             titleLabel.leftAnchor.constraint(equalTo: titleLabel.superview!.leftAnchor, constant: 0),
+            titleLabel.rightAnchor.constraint(equalTo: titleLabel.superview!.rightAnchor, constant: 0),
             titleLabel.bottomAnchor.constraint(equalTo: titleLabel.superview!.bottomAnchor, constant: 0)
         ]
         NSLayoutConstraint.activate(titleLabelConstraints)
-        
-        
-//        self.titleLabel.snp.makeConstraints { make in
-//            make.top.left.bottom.equalToSuperview().offset(0)
-//        }
-
+    
         self.tfStackView.translatesAutoresizingMaskIntoConstraints = false
         let tfStackViewConstraints = [
             tfStackView.topAnchor.constraint(equalTo: tfStackView.superview!.topAnchor, constant: 0),
-            tfStackView.rightAnchor.constraint(equalTo: tfStackView.superview!.rightAnchor, constant: 0),
             tfStackView.leftAnchor.constraint(equalTo: tfStackView.superview!.leftAnchor, constant: 16),
-            tfStackView.bottomAnchor.constraint(equalTo: tfStackView.superview!.bottomAnchor, constant: -16)
+            tfStackView.rightAnchor.constraint(equalTo: tfStackView.superview!.rightAnchor, constant: -16),
+            tfStackView.bottomAnchor.constraint(equalTo: tfStackView.superview!.bottomAnchor, constant: 0)
         ]
         NSLayoutConstraint.activate(tfStackViewConstraints)
-        
-//        self.tfStackView.snp.makeConstraints { make in
-//            make.top.equalToSuperview().offset(0)
-//            make.bottom.equalToSuperview().inset(0)
-//            make.left.equalToSuperview().offset(16)
-//            make.right.equalToSuperview().inset(16)
-//        }
+
 
         self.textField.translatesAutoresizingMaskIntoConstraints = false
         let textFieldConstraints = [
@@ -447,11 +422,6 @@ extension MKSelectBox {
         ]
         NSLayoutConstraint.activate(textFieldConstraints)
         
-//        self.textField.snp.makeConstraints { make in
-//            make.top.equalToSuperview().offset(0)
-//            make.bottom.equalToSuperview().inset(0)
-//        }
-
         self.trailingImageView.translatesAutoresizingMaskIntoConstraints = false
         let trailingImageViewConstraints = [
             trailingImageView.widthAnchor.constraint(equalToConstant: 20),
@@ -459,19 +429,11 @@ extension MKSelectBox {
         ]
         NSLayoutConstraint.activate(trailingImageViewConstraints)
         
-//        self.trailingImageView.snp.makeConstraints { make in
-//            make.width.height.equalTo(20)
-//        }
-    
         self.bottomAreaContentView.translatesAutoresizingMaskIntoConstraints = false
         let bottomAreaContentViewConstraints = [
             bottomAreaContentView.heightAnchor.constraint(equalToConstant: 20)
         ]
         NSLayoutConstraint.activate(bottomAreaContentViewConstraints)
-        
-//        self.bottomAreaContentView.snp.makeConstraints { make in
-//            make.height.equalTo(20)
-//        }
         
         self.helperTextLabel.translatesAutoresizingMaskIntoConstraints = false
         let helperTextLabelConstraints = [
@@ -481,10 +443,6 @@ extension MKSelectBox {
         ]
         NSLayoutConstraint.activate(helperTextLabelConstraints)
         
-//        self.helperTextLabel.snp.makeConstraints { make in
-//            make.top.left.bottom.equalToSuperview().offset(0)
-//        }
-        
         self.errorDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         let errorDescriptionLabelConstraints = [
             errorDescriptionLabel.topAnchor.constraint(equalTo: errorDescriptionLabel.superview!.topAnchor, constant: 0),
@@ -493,9 +451,6 @@ extension MKSelectBox {
         ]
         NSLayoutConstraint.activate(errorDescriptionLabelConstraints)
         
-//        self.errorDescriptionLabel.snp.makeConstraints { make in
-//            make.top.left.bottom.equalToSuperview().offset(0)
-//        }
         self.addSubview(self.actionButton)
         self.actionButton.translatesAutoresizingMaskIntoConstraints = false
         let actionButtonConstraints = [
@@ -506,10 +461,6 @@ extension MKSelectBox {
         ]
         NSLayoutConstraint.activate(actionButtonConstraints)
         
-//        self.addSubview(self.actionButton)
-//        self.actionButton.snp.makeConstraints { make in
-//            make.top.left.bottom.right.equalTo(textFieldBgView)
-//        }
     }
 
     
@@ -547,7 +498,6 @@ extension MKSelectBox {
 
 // MARK: - DATA
 extension MKSelectBox {
-    
     private func setSelectboxEnable(status: SelectBoxStatus) {
         self.actionButton.isEnabled = status != .disabled
         self.textField.isUserInteractionEnabled = status != .disabled

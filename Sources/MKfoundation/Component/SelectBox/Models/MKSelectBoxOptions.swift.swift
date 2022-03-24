@@ -14,11 +14,10 @@ import UIKit
 ///   - input : 셀렉트 박스 안에 들어갈 인풋입니다 (별도 설정이 가능합니다)
 
 public struct MKSelectBoxOptions {
-    var inputType: SelectBoxTypes = .outLine
-    var placeHolder: String       = ""
-    var title: String?            = nil
-    var helperText: String?       = nil
-    var input: String?            = nil
+    public var inputType: SelectBoxTypes = .outLine
+    public var placeHolder: String       = ""
+    public var title: String?            = nil
+    public var helperText: String?       = nil
     
     public init() { }
     
@@ -26,15 +25,29 @@ public struct MKSelectBoxOptions {
         inputType: SelectBoxTypes = .outLine,
         placeHolder: String       = "",
         title: String?            = nil,
-        helperText: String?       = nil,
-        input: String?            = nil
+        helperText: String?       = nil
         
     ) {
         self.inputType            = inputType
         self.placeHolder          = placeHolder
         self.title                = title
         self.helperText           = helperText
-        self.input                = input
     }
     
+}
+
+extension MKSelectBoxOptions: Hashable, Equatable {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.inputType == rhs.inputType
+        && lhs.placeHolder == rhs.placeHolder
+        && lhs.title == rhs.title
+        && lhs.helperText == rhs.helperText
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(inputType)
+        hasher.combine(placeHolder)
+        hasher.combine(title)
+        hasher.combine(helperText)
+    }
 }
