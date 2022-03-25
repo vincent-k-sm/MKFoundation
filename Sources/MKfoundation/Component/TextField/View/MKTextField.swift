@@ -1,28 +1,46 @@
 //
-//  MKSelectBox.swift
+//  MKTextField.swift
 //
 
 
 import Foundation
 import UIKit
 
-open class MKSelectBox: UIView {
+open class MKTextField: UIView {
     /// tableview 등에서 view 높이가 변경되어야 하는 경우 사용되는 값잆니다
     private weak var tableView: UITableView?
     public private(set) var viewHeight: CGFloat = 0.0
     
-    public weak var delegate: MKSelectBoxDelegate?
+    public weak var delegate: MKTextFieldDelegate?
     
-    public var text: String {
+    /// Override Textfield
+    @discardableResult
+    open override func becomeFirstResponder() -> Bool {
+        return self.textField.becomeFirstResponder()
+    }
+    
+    @discardableResult
+    open override func resignFirstResponder() -> Bool {
+        return self.textField.resignFirstResponder()
+    }
+    
+    /// Override Textfield
+    open var text: String {
         get {
             return self.textField.text ?? ""
         }
         set {
             self.textField.text = newValue
+            self.updateCounter()
+            if self.options.limitCount < newValue.count {
+                self.validTextFieldLimitted()
+            }
+            
         }
     }
+    var trimmed: Bool = false
     
-    /// saved error message in `SetError` method
+    /// Override Textfield
     public var placeHolderText: String? {
         get {
             return self.textField.attributedPlaceholder?.string ?? ""
@@ -48,27 +66,63 @@ open class MKSelectBox: UIView {
         }
     }
     
+    
     /// saved error message in `SetError` method
     public private(set) var errMessage: String = ""
     
     /// Override Textfield
     public var isEnabled: Bool {
         get {
-            return self.actionButton.isEnabled
+            return self.textField.isUserInteractionEnabled
         }
         set {
-            if !newValue {
-                self.selectBoxStatus = .disabled
+            if newValue {
+                self.updateStatus()
             }
-            self.actionButton.isEnabled = newValue
+            else {
+                self.textFieldStatus = .disabled
+            }
+            
+            self.textField.isUserInteractionEnabled = newValue
+        }
+    }
+
+    /// Override Textfield
+    public var returnKeyType: UIReturnKeyType {
+        get {
+            return self.textField.returnKeyType
+        }
+        set {
+            self.textField.returnKeyType = newValue
         }
     }
     
-    lazy var actionButton: UIButton = {
-        let v = UIButton(type: .custom)
-        v.setBackgroundColor(.clear, for: .normal)
-        return v
-    }()
+    /// Override Textfield
+    public var attributedText: NSAttributedString? {
+        get {
+            return self.textField.attributedText
+        }
+        set {
+            self.textField.attributedText = newValue
+        }
+    }
+    
+    /// Override Textfield
+    public var clearsOnBeginEditing: Bool {
+        get {
+            return self.textField.clearsOnBeginEditing
+        }
+        set {
+            self.textField.clearsOnBeginEditing = newValue
+        }
+    }
+    
+    /// Override Textfield
+    public var isEditing: Bool {
+        get {
+            return self.textField.isEditing
+        }
+    }
     
     lazy var rootStackView: UIStackView = {
         let v = UIStackView()
@@ -86,6 +140,7 @@ open class MKSelectBox: UIView {
         let v = UIView()
         v.backgroundColor = .clear
         v.addSubview(titleLabel)
+        v.addSubview(counterLabel)
         return v
     }()
     
@@ -99,6 +154,13 @@ open class MKSelectBox: UIView {
         return v
     }()
     
+    lazy var counterLabel: UILabel = {
+        let v = UILabel()
+        v.isHidden = !self.options.counter
+        v.textColor = UIColor.setColorSet(.text_secondary)
+        v.font = UIFont.systemFont(ofSize: 14)
+        return v
+    }()
     
     lazy var subStackView: UIStackView = {
         let v = UIStackView()
@@ -111,7 +173,7 @@ open class MKSelectBox: UIView {
         return v
     }()
     
-    lazy var trailingImageView: UIImageView = {
+    lazy var leadingImageView: UIImageView = {
         let v = UIImageView()
         v.image = nil
         return v
@@ -123,9 +185,8 @@ open class MKSelectBox: UIView {
         v.spacing = 12
         v.alignment = .center
         v.distribution = .fill
+        v.addArrangedSubview(leadingImageView)
         v.addArrangedSubview(textField)
-        v.addArrangedSubview(trailingImageView)
-        
         return v
     }()
     
@@ -152,6 +213,7 @@ open class MKSelectBox: UIView {
     
     lazy var helperTextLabel: UILabel = {
         let v = UILabel()
+        v.isHidden = !self.options.counter
         v.textColor = UIColor.setColorSet(.text_disabled)
         v.font = UIFont.systemFont(ofSize: 14)
         v.font = UIFont.systemFont(ofSize: 14)
@@ -163,29 +225,37 @@ open class MKSelectBox: UIView {
     
     lazy var errorDescriptionLabel: UILabel = {
         let v = UILabel()
-        v.textColor = UIColor.setColorSet(.red)
+        v.isHidden = !self.options.counter
+        v.textColor = UIColor.setColorSet(.text_disabled)
         v.font = UIFont.systemFont(ofSize: 14)
         return v
     }()
     
-    public private(set) var options: MKSelectBoxOptions = MKSelectBoxOptions()
-    private var currentStatus: SelectBoxStatus? = nil
+    private(set) var options: MKTextFieldOptions = MKTextFieldOptions()
     public private(set) var isOnError: Bool = false
     
-    private var _selectBoxStatus: SelectBoxStatus = .normal
-    public private(set) var selectBoxStatus: SelectBoxStatus {
+    private var _textFieldStatus: TextFieldStatus = .normal
+    private(set) var textFieldStatus: TextFieldStatus {
         get {
-            return self._selectBoxStatus
+            return self._textFieldStatus
         }
         set {
-            self._selectBoxStatus = newValue
+            self._textFieldStatus = newValue
             self.setOutline(status: newValue)
-            self.setSelectboxEnable(status: newValue)
-            self.updateIcon(status: newValue)
-            if newValue != .error {
-                self.currentStatus = newValue
+            self.setTextFieldEnable(status: newValue)
+            self.delegate?.textFieldStatusDidChange?(self, status: newValue)
+        }
+    }
+    
+    /// When Automatically useable Count Limitted Error Message
+    /// - Note : Can Use either delegate?.textFieldLimitted
+    private(set) var isTextCountLimitted: Bool = false {
+        willSet {
+            /// 최대 글자수 도달 시 자동으로 출력되는 메시지가 설정되어있는 경우
+            if let msg = self.options.autoLimitCountErrorMessage, !msg.isEmpty {
+                self.setError(isOn: newValue, errorMsg: msg)
             }
-            self.delegate?.didChangeStatus(self, status: newValue)
+            
         }
     }
     
@@ -215,19 +285,14 @@ open class MKSelectBox: UIView {
     
     public override func draw(_ rect: CGRect) {
         self.setHeight()
-        self.setOutline(status: self.selectBoxStatus)
+        self.setOutline(status: self.textFieldStatus)
     }
     
 }
 
-
-public extension MKSelectBox {
-    func clear() {
-        self.text = ""
-    }
-    
-    func setSelectboxStatus(status: SelectBoxStatus) {
-        self.selectBoxStatus = status
+public extension MKTextField {
+    func setTextfieldStatus(status: TextFieldStatus) {
+        self.textFieldStatus = status
         if (self.isOnError && status != .error) {
             self.setError(isOn: false)
         }
@@ -244,31 +309,38 @@ public extension MKSelectBox {
         self.helperTextLabel.isHidden = isOn
         if isOn {
             self.errMessage = errorMsg
-            self.selectBoxStatus = .error
+            self.textFieldStatus = .error
             self.errorDescriptionLabel.text = errorMsg
         }
         else {
-            self.revertStatus()
+            self.updateStatus()
             
         }
         self.isOnError = isOn
         self.setHeight()
     }
     
-    /// MKSelectBox를 세팅하는 MKSelectBoxOptions 입니다
+    /// SFTextField를 세팅하는 SFTextFieldOptions 입니다
     /// - Parameters:
-    ///   - option: `MKSelectBoxOptions` 를 참고하세요
+    ///   - option: `SFTextFieldOptions` 를 참고하세요
     ///   - tableView: TableView Cell 안에 넣는 경우 적용합니다
     ///   - important:TableView를 넘기지 않는 경우 에러 메시지로 인한 텍스트 높이 변경이 수동으로 이뤄져야 합니다
     
-    func configure(option: MKSelectBoxOptions, tableView: UITableView? = nil) {
+    func configure(option: MKTextFieldOptions, tableView: UITableView? = nil) {
         self.tableView = tableView
         self.options = option
-        self.placeHolderText = option.placeHolder
+        if let msg = options.autoLimitCountErrorMessage {
+            if msg.isEmpty {
+                fatalError("autoLimitCountErrorMessage Setted but empty string")
+            }
+            if options.limitCount == 0 {
+                fatalError("autoLimitCountErrorMessage Setted but limitCount not Setted")
+            }
+        }
         self.setUI()
         self.setHeight()
-        let selectBoxStatus = self._selectBoxStatus
-        self.selectBoxStatus = selectBoxStatus
+        let textFieldStatus = self._textFieldStatus
+        self.textFieldStatus = textFieldStatus
     }
 
     
@@ -276,12 +348,12 @@ public extension MKSelectBox {
 
 
 // MARK: - UI
-extension MKSelectBox {
+extension MKTextField {
     private func setHeight() {
         var expectHeight = Appearance.textFieldHeight
         
         // top
-        if options.title != nil {
+        if options.title != nil || options.counter == true {
             expectHeight += Appearance.topAreaHeight
             self.topAreaContentView.isHidden = false
         }
@@ -290,7 +362,7 @@ extension MKSelectBox {
         }
         
         // bottom
-        if (self.selectBoxStatus == .error && !errMessage.isEmpty) || !(options.helperText?.isEmpty ?? true) {
+        if (self.textFieldStatus == .error && errMessage.isEmpty) || !(options.helperText?.isEmpty ?? true) {
             expectHeight += Appearance.bottomAreaHeight
             self.bottomAreaContentView.isHidden = false
         }
@@ -320,8 +392,7 @@ extension MKSelectBox {
         UIView.setAnimationsEnabled(true)
     }
     
-    private func setOutline(status: SelectBoxStatus) {
-        
+    private func setOutline(status: TextFieldStatus) {
         if self.options.inputType == .outLine {
             self.textFieldBgView.toCornerRound(
                 corners: [.allCorners],
@@ -342,27 +413,9 @@ extension MKSelectBox {
         }
         
     }
-    
-    
-    private func updateIcon(status: SelectBoxStatus) {
-        if status == .disabled {
-            self.trailingImageView.image = Appearance.symbolImageDisable
-        }
-        else {
-            self.trailingImageView.image = Appearance.symbolImage
-        }
-    }
-
-    
-    fileprivate func setUI() {
-        
-        self.setTopAreaUI()
-        self.setSelecboxUI()
-        self.setBottomAreaUI()
-    }
-    
     fileprivate func setLayout() {
         self.addSubview(self.rootStackView)
+        
         self.rootStackView.translatesAutoresizingMaskIntoConstraints = false
         let rootStackConstraints = [
             rootStackView.topAnchor.constraint(equalTo: rootStackView.superview!.topAnchor, constant: 0),
@@ -371,7 +424,6 @@ extension MKSelectBox {
             rootStackView.bottomAnchor.constraint(equalTo: rootStackView.superview!.bottomAnchor, constant: 0)
         ]
         NSLayoutConstraint.activate(rootStackConstraints)
-        
         
         self.topAreaContentView.translatesAutoresizingMaskIntoConstraints = false
         let topAreaContentViewConstraints = [
@@ -387,7 +439,15 @@ extension MKSelectBox {
             titleLabel.bottomAnchor.constraint(equalTo: titleLabel.superview!.bottomAnchor, constant: 0)
         ]
         NSLayoutConstraint.activate(titleLabelConstraints)
-    
+        
+        self.counterLabel.translatesAutoresizingMaskIntoConstraints = false
+        let counterLabelConstraints = [
+            counterLabel.topAnchor.constraint(equalTo: counterLabel.superview!.topAnchor, constant: 0),
+            counterLabel.rightAnchor.constraint(equalTo: counterLabel.superview!.rightAnchor, constant: 0),
+            counterLabel.bottomAnchor.constraint(equalTo: counterLabel.superview!.bottomAnchor, constant: 0)
+        ]
+        NSLayoutConstraint.activate(counterLabelConstraints)
+        
         self.tfStackView.translatesAutoresizingMaskIntoConstraints = false
         let tfStackViewConstraints = [
             tfStackView.topAnchor.constraint(equalTo: tfStackView.superview!.topAnchor, constant: 0),
@@ -397,21 +457,20 @@ extension MKSelectBox {
         ]
         NSLayoutConstraint.activate(tfStackViewConstraints)
 
-
         self.textField.translatesAutoresizingMaskIntoConstraints = false
         let textFieldConstraints = [
             textField.topAnchor.constraint(equalTo: textField.superview!.topAnchor, constant: 0),
             textField.bottomAnchor.constraint(equalTo: textField.superview!.bottomAnchor, constant: 0)
         ]
         NSLayoutConstraint.activate(textFieldConstraints)
-        
-        self.trailingImageView.translatesAutoresizingMaskIntoConstraints = false
-        let trailingImageViewConstraints = [
-            trailingImageView.widthAnchor.constraint(equalToConstant: 20),
-            trailingImageView.heightAnchor.constraint(equalToConstant: 20)
+
+        self.leadingImageView.translatesAutoresizingMaskIntoConstraints = false
+        let leadingImageViewConstraints = [
+            leadingImageView.widthAnchor.constraint(equalToConstant: 20),
+            leadingImageView.heightAnchor.constraint(equalToConstant: 20)
         ]
-        NSLayoutConstraint.activate(trailingImageViewConstraints)
-        
+        NSLayoutConstraint.activate(leadingImageViewConstraints)
+    
         self.bottomAreaContentView.translatesAutoresizingMaskIntoConstraints = false
         let bottomAreaContentViewConstraints = [
             bottomAreaContentView.heightAnchor.constraint(equalToConstant: 20)
@@ -433,46 +492,43 @@ extension MKSelectBox {
             errorDescriptionLabel.bottomAnchor.constraint(equalTo: errorDescriptionLabel.superview!.bottomAnchor, constant: 0)
         ]
         NSLayoutConstraint.activate(errorDescriptionLabelConstraints)
-        
-        self.addSubview(self.actionButton)
-        self.actionButton.translatesAutoresizingMaskIntoConstraints = false
-        let actionButtonConstraints = [
-            actionButton.topAnchor.constraint(equalTo: actionButton.superview!.topAnchor, constant: 0),
-            actionButton.rightAnchor.constraint(equalTo: actionButton.superview!.rightAnchor, constant: 0),
-            actionButton.leftAnchor.constraint(equalTo: actionButton.superview!.leftAnchor, constant: 0),
-            actionButton.bottomAnchor.constraint(equalTo: actionButton.superview!.bottomAnchor, constant: 0)
-        ]
-        NSLayoutConstraint.activate(actionButtonConstraints)
-        
     }
-
     
-    private func setSelecboxUI() {
+    
+    fileprivate func setUI() {
+        self.setTextField()
+        self.setTopAreaUI()
+        self.setBottomAreaUI()
+        self.updateCounter()
+    }
+    
+    private func setTextField() {
         self.textField.placeHolderText = self.options.placeHolder
-        self.actionButton.setTitle(nil, for: .normal)
+        self.textField.delegate = self
+        
+        if let leadingIcon = self.options.leadingIcon {
+            self.leadingImageView.image = leadingIcon
+            self.leadingImageView.isHidden = false
+        }
+        else {
+            self.leadingImageView.isHidden = true
+        }
     }
     
     private func setTopAreaUI() {
         self.topAreaContentView.backgroundColor = .clear
         self.titleLabel.text = self.options.title
-        self.titleLabel.isHidden = options.title?.isEmpty ?? false
-        self.titleLabel.font = UIFont.systemFont(ofSize: 14)
-        self.titleLabel.textColor = UIColor.setColorSet(.text_secondary)
-
+        self.titleLabel.isHidden = options.title?.isEmpty ?? true
+        self.counterLabel.isHidden = !self.options.counter
     }
     
     private func setBottomAreaUI() {
         self.bottomAreaContentView.backgroundColor = .clear
-        self.errorDescriptionLabel.font = UIFont.systemFont(ofSize: 14)
-        self.errorDescriptionLabel.textColor = UIColor.setColorSet(.red)
-        
-        self.helperTextLabel.font = UIFont.systemFont(ofSize: 14)
-        self.helperTextLabel.textColor = UIColor.setColorSet(.text_disabled)
         
         if let helperText = self.options.helperText {
             self.helperTextLabel.text = helperText
         }
-        self.helperTextLabel.isHidden = self.options.helperText?.isEmpty ?? false
+        self.helperTextLabel.isHidden = self.options.helperText?.isEmpty ?? true
         self.errorDescriptionLabel.isHidden = true
     }
     
@@ -480,38 +536,128 @@ extension MKSelectBox {
 
 
 // MARK: - DATA
-extension MKSelectBox {
-    private func setSelectboxEnable(status: SelectBoxStatus) {
-        self.actionButton.isEnabled = status != .disabled
+extension MKTextField {
+    
+    private func setTextFieldEnable(status: TextFieldStatus) {
         self.textField.isUserInteractionEnabled = status != .disabled
+        
     }
 }
-// MARK: - SelectBox
-extension MKSelectBox {
+// MARK: - TextField
+extension MKTextField {
     fileprivate func setObservers() {
-        self.actionButton.addTarget(self, action: #selector(self.selectBoxTapped), for: .touchUpInside)
+        let textField = self.textField
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(textFieldTextDidEndEditing),
+            name: UITextField.textDidEndEditingNotification,
+            object: textField)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(textFieldTextDidBeginEditing),
+            name: UITextField.textDidBeginEditingNotification,
+            object: textField
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(textFieldTextChanged),
+            name: UITextField.textDidChangeNotification,
+            object: textField
+        )
+        
+        
     }
     
-    private func revertStatus() {
-        if let currentStatus = self.currentStatus {
-            self.selectBoxStatus = currentStatus
+    // MARK: - TextField Editing Observer
+    @objc private func textFieldTextDidBeginEditing(notification : NSNotification) {
+        self.textFieldStatus = .activate
+        self.delegate?.textFieldTextDidBeginEditing?(self)
+    }
+    
+    @objc private func textFieldTextDidEndEditing(notification : NSNotification) {
+        guard let text = self.textField.text else { return }
+        if text.isEmpty {
+            self.textFieldStatus = .normal
+        }
+        else {
+            if self.textFieldStatus != .error {
+                self.textFieldStatus = .activate
+            }
+            
+        }
+        
+        self.delegate?.textFieldTextDidEndEditing?(self)
+    }
+    
+    private func validTextFieldLimitted() {
+        let inputText = self.text
+        let limitCount = options.limitCount
+        
+        if limitCount != 0 {
+            let isLimmit = inputText.count > limitCount
+            
+            self.isTextCountLimitted = isLimmit
+            self.delegate?.textFieldLimitted?(self, limitted: isLimmit)
+            
+            if inputText.count > limitCount {
+                let trimmed = String(inputText.prefix(limitCount))
+                self.text = trimmed
+            }
+            
         }
     }
     
-    @objc
-    private func selectBoxTapped() {
-        self.delegate?.didSelected(self)
+    
+    @objc private func textFieldTextChanged(notifcation: NSNotification) {
+        self.validTextFieldLimitted()
+        self.updateCounter()
+        self.delegate?.textFieldTextDidChange?(self, text: self.text)
     }
-
+    
+    private func updateCounter() {
+        
+        self.counterLabel.text = "\(self.text.count)/\(self.options.limitCount)"
+    }
+    
+    private func updateStatus() {
+        if self.textField.isFirstResponder {
+            self.textFieldStatus = .activate
+        }
+        else {
+            if self.textField.hasText {
+                self.textFieldStatus = .normal
+            }
+            else {
+                self.textFieldStatus = .activate
+            }
+        }
+    }
 }
 
-extension MKSelectBox {
+// MARK: - UITextFieldDelegate
+extension MKTextField: UITextFieldDelegate {
+    
+    /// Textfield를 직접적으로 Overriding 할 수는 있으나 delegate 로 제공되는 `textFieldShouldReturn` 를 쓰기 권장합니다
+    public func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        let v = self.delegate?.textFieldShouldClear?(self)
+        return v ?? true
+        
+    }
+    
+    /// Textfield를 직접적으로 Overriding 할 수는 있으나 delegate 로 제공되는 `textFieldShouldReturn` 를 쓰기 권장합니다
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        let v = self.delegate?.textFieldShouldReturn?(self)
+        return v ?? true
+    }
+    
+}
+
+extension MKTextField {
     struct Appearance {
         static let textFieldHeight: CGFloat = 56
         static let topAreaHeight: CGFloat = 24
         static let bottomAreaHeight: CGFloat = 28
-        static let symbolImage: UIImage? = UIImage(named: "ic_dropdown.png", in: Bundle.module, compatibleWith: nil) ?? nil
-        static let symbolImageDisable: UIImage? = UIImage(named: "ic_dropdown_disable.png", in: Bundle.module, compatibleWith: nil) ?? nil
     }
 }
 

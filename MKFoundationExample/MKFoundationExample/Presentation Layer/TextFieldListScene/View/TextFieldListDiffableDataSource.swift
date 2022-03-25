@@ -1,5 +1,5 @@
 //
-//  SelectBoxListDiffableDataSource.swift
+//  TextFieldListDiffableDataSource.swift
 //
 
 
@@ -7,8 +7,8 @@ import Foundation
 import UIKit
 import MKFoundation
 
-enum SelectBoxListCellTypes: Hashable, Equatable {
-    case item(option: MKSelectBoxOptions, status: SelectBoxStatus)
+enum TextFieldListCellTypes: Hashable, Equatable {
+    case item(option: MKTextFieldOptions, status: TextFieldStatus)
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {
@@ -19,11 +19,11 @@ enum SelectBoxListCellTypes: Hashable, Equatable {
     }
 }
 
-class SelectBoxListDiffableDataSource: UITableViewDiffableDataSource<SelectBoxStatus, SelectBoxListCellTypes> {
+class TextFieldListDiffableDataSource: UITableViewDiffableDataSource<TextFieldStatus, TextFieldListCellTypes> {
     
-    typealias Snapshot = NSDiffableDataSourceSnapshot<SelectBoxStatus, SelectBoxListCellTypes>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<TextFieldStatus, TextFieldListCellTypes>
     
-    var currentSectionIdentifiers: [SelectBoxStatus] = []
+    var currentSectionIdentifiers: [TextFieldStatus] = []
     var snapshot = Snapshot()
     
     deinit {
@@ -31,12 +31,12 @@ class SelectBoxListDiffableDataSource: UITableViewDiffableDataSource<SelectBoxSt
     }
 }
 
-extension SelectBoxListDiffableDataSource {
+extension TextFieldListDiffableDataSource {
     func initSnapShot() {
         self.snapshot = Snapshot()
     }
     
-    func apply(animated: Bool, section: [SelectBoxStatus] = []) {
+    func apply(animated: Bool, section: [TextFieldStatus] = []) {
         if !self.currentSectionIdentifiers.isEmpty {
             let reloadSections = self.snapshot.sectionIdentifiers.filter({ self.currentSectionIdentifiers.contains($0) })
             self.snapshot.reloadSections(reloadSections)

@@ -9,6 +9,7 @@ enum FlowType{
     case exampleList(_ implementation: ExampleListCoordinatorImplementation)
     case buttonList(_ implementation: ButtonListCoordinatorImplementation)
     case selectBoxList(_ implementation: SelectBoxListCoordinatorImplementation)
+    case textfieldList(_ implementation: TextFieldListCoordinatorImplementation)
 }
 
 extension BaseCoordinator {
@@ -22,6 +23,9 @@ extension BaseCoordinator {
                 
             case let .selectBoxList(impl):
                 return SelectBoxListCoordinator(implementation: impl)
+                
+            case let .textfieldList(impl):
+                return TextFieldListCoordinator(implementation: impl)
         }
     }
 }

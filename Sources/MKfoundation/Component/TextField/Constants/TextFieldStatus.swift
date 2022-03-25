@@ -1,11 +1,11 @@
 //
-//  SelectBoxStatus.swift
+//  TextFieldStatus.swift
 //
 
 
 import Foundation
 
-public enum SelectBoxStatus: Int, CaseIterable {
+@objc public enum TextFieldStatus: Int, CaseIterable {
     case normal // inActivate 인풋이 채워지지 않은 상태
     case activate // 인풋이 채워진 상태
     case error
@@ -28,21 +28,21 @@ public enum SelectBoxStatus: Int, CaseIterable {
         }
     }
     
-    var fill: SelectBoxStatusModel {
+    var fill: TextFieldStatusModel {
         switch self {
                 
             case .normal:
-                return SelectBoxStatusModel(outline: .grey600, background: .textfield_bg)
+                return TextFieldStatusModel(outline: .grey600, background: .textfield_bg)
 
             case .activate:
-                return SelectBoxStatusModel(outline: .purple500, background: .textfield_bg)
+                return TextFieldStatusModel(outline: .purple500, background: .textfield_bg)
 
             case .error:
-                return SelectBoxStatusModel(outline: .grey600, background: .red)
+                return TextFieldStatusModel(outline: .grey600, background: .red)
 
             case .disabled:
-                return SelectBoxStatusModel(outline: .grey600, background: .textfield_bg)
+                return TextFieldStatusModel(outline: .grey600, background: .textfield_bg)
         }
     }
-
+    
 }

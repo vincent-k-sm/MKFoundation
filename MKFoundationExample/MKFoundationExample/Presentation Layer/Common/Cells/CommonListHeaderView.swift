@@ -8,7 +8,7 @@ import UIKit
 import SnapKit
 import MKFoundation
 
-class SelectBoxListHeaderView: UITableViewHeaderFooterView {
+class CommonListHeaderView: UITableViewHeaderFooterView {
     
     lazy var titleLabel: UILabel = {
         let v = UILabel()
@@ -27,7 +27,7 @@ class SelectBoxListHeaderView: UITableViewHeaderFooterView {
     }
 }
 
-extension SelectBoxListHeaderView {
+extension CommonListHeaderView {
     private func setUI() {
         let bgView = UIView()
         bgView.backgroundColor = UIColor.setColorSet(.background_elevated)

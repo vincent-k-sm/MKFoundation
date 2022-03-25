@@ -10,7 +10,7 @@ import SnapKit
 class SelectBoxListViewController: BaseViewController<SelectBoxListViewModel> {
 
     var cancelables: Set<AnyCancellable> = []
-    var isOutLine: Bool = false
+    var isOutLine: Bool = true
     
     lazy var navRightButton: UIButton = {
         let v = UIButton(type: .custom)
@@ -32,7 +32,7 @@ class SelectBoxListViewController: BaseViewController<SelectBoxListViewModel> {
         v.separatorStyle = .singleLine
         v.removeEventDelay()
         v.registerCell(type: SelectBoxListCell.self)
-        v.registerCell(type: SelectBoxListHeaderView.self)
+        v.registerCell(type: CommonListHeaderView.self)
         v.delegate = self
         return v
     }()
@@ -101,6 +101,7 @@ extension SelectBoxListViewController {
     }
     
     private func rightButtonTapped() {
+        self.navRightButton.isSelected.toggle()
         self.isOutLine.toggle()
         self.tableView.reloadData()
     }
@@ -141,7 +142,7 @@ extension SelectBoxListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view: UIView?
         guard let section = SelectBoxStatus(rawValue: section) else { return UIView() }
-        let customView = self.tableView.dequeueCell(withType: SelectBoxListHeaderView.self) as! SelectBoxListHeaderView
+        let customView = self.tableView.dequeueCell(withType: CommonListHeaderView.self) as! CommonListHeaderView
         customView.titleLabel.text = "\(section.self)"
         view = customView
         return view

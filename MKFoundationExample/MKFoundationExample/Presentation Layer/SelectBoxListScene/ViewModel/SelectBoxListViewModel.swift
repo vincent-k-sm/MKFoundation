@@ -99,8 +99,7 @@ extension SelectBoxListViewModel {
             cells.append(.item(option: option, status: status ))
         }
         self.dataSource.snapshot.appendItems(cells, toSection: status)
-        
-        
+    
     }
 }
 
