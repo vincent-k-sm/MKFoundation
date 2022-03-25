@@ -10,7 +10,7 @@ import SnapKit
 class ButtonListViewController: BaseViewController<ButtonListViewModel> {
     
     var cancelables: Set<AnyCancellable> = []
-    var isOutLine: Bool = false
+    var isOutLine: Bool = true
     
     lazy var navRightButton: UIButton = {
         let v = UIButton(type: .custom)
@@ -102,6 +102,7 @@ extension ButtonListViewController {
     }
     
     private func rightButtonTapped() {
+        self.navRightButton.isSelected.toggle()
         self.isOutLine.toggle()
         self.tableView.reloadData()
     }

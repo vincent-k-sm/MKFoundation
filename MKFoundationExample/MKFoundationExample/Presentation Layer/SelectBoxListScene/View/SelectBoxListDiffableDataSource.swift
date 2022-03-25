@@ -7,19 +7,6 @@ import Foundation
 import UIKit
 import MKFoundation
 
-/// SelectBoxStatus
-//enum SelectBoxListSections: Int, CaseIterable {
-//    case normal
-//    case focused
-//    case activate
-//    case error
-//    case disabled
-//
-//    var title: String {
-//        return "\(self)"
-//    }
-//}
-
 enum SelectBoxListCellTypes: Hashable, Equatable {
     case item(option: MKSelectBoxOptions, status: SelectBoxStatus)
     
