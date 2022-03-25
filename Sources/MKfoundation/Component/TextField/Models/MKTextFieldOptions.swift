@@ -16,14 +16,14 @@ import UIKit
 ///   - counter: 상단 카운트 설정 여부입니다 적용 시 최대 높이가 변경됩니다
 ///   - leadingIcon : 좌측 이미지 심볼을 적용합니다  이미지가 있는 경우 레이아웃이 변경됩니다
 public struct MKTextFieldOptions {
-    var inputType: TextFieldTypes            = .outLine
-    var placeHolder: String                  = ""
-    var limitCount: Int                      = 0
-    var autoLimitCountErrorMessage: String?  = nil
-    var title: String?                       = nil
-    var helperText: String?                  = nil
-    var counter: Bool                        = false
-    var leadingIcon: UIImage?                = nil
+    public var inputType: TextFieldTypes            = .outLine
+    public var placeHolder: String                  = ""
+    public var limitCount: Int                      = 0
+    public var autoLimitCountErrorMessage: String?  = nil
+    public var title: String?                       = nil
+    public var helperText: String?                  = nil
+    public var counter: Bool                        = false
+    public var leadingIcon: UIImage?                = nil
     
     public init() { }
     
@@ -47,4 +47,29 @@ public struct MKTextFieldOptions {
         self.leadingIcon                = leadingIcon
     }
     
+}
+
+
+extension MKTextFieldOptions: Hashable, Equatable {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.inputType == rhs.inputType
+        && lhs.placeHolder == rhs.placeHolder
+        && lhs.limitCount == rhs.limitCount
+        && lhs.autoLimitCountErrorMessage == rhs.autoLimitCountErrorMessage
+        && lhs.title == rhs.title
+        && lhs.helperText == rhs.helperText
+        && lhs.counter == rhs.counter
+        && lhs.leadingIcon == rhs.leadingIcon
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(inputType)
+        hasher.combine(placeHolder)
+        hasher.combine(limitCount)
+        hasher.combine(autoLimitCountErrorMessage)
+        hasher.combine(title)
+        hasher.combine(helperText)
+        hasher.combine(counter)
+        hasher.combine(leadingIcon)
+    }
 }

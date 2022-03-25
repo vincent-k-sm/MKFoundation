@@ -232,6 +232,7 @@ open class MKTextField: UIView {
     }()
     
     private(set) var options: MKTextFieldOptions = MKTextFieldOptions()
+    public private(set) var isOnError: Bool = false
     
     private var _textFieldStatus: TextFieldStatus = .normal
     private(set) var textFieldStatus: TextFieldStatus {
@@ -242,16 +243,17 @@ open class MKTextField: UIView {
             self._textFieldStatus = newValue
             self.setOutline(status: newValue)
             self.setTextFieldEnable(status: newValue)
+            self.delegate?.textFieldStatusDidChange?(self, status: newValue)
         }
     }
     
     /// When Automatically useable Count Limitted Error Message
     /// - Note : Can Use either delegate?.textFieldLimitted
     private(set) var isTextCountLimitted: Bool = false {
-        didSet {
+        willSet {
             /// 최대 글자수 도달 시 자동으로 출력되는 메시지가 설정되어있는 경우
-            if let msg = self.options.autoLimitCountErrorMessage, msg.isEmpty {
-                self.setError(isOn: oldValue, errorMsg: msg)
+            if let msg = self.options.autoLimitCountErrorMessage, !msg.isEmpty {
+                self.setError(isOn: newValue, errorMsg: msg)
             }
             
         }
@@ -289,37 +291,12 @@ open class MKTextField: UIView {
 }
 
 public extension MKTextField {
-    
-    
-    /// UITest 및 예제용 함수입니다
-    @available(*, deprecated, message: "This Method is Not Logical - Only use for Test")
-    func setTextfieldStatus(status: TextFieldStatus, forceFocus: Bool) {
-        self.text = ""
+    func setTextfieldStatus(status: TextFieldStatus) {
         self.textFieldStatus = status
-        switch status {
-                
-            case .normal:
-                if forceFocus {
-                    self.textFieldStatus = .focused
-                    self.setOutline(status: .focused)
-                }
-                
-            case .activate:
-                self.text = "abc1234abc1234abc1234abc1234abc1234abc1234"
-                if forceFocus {
-                    self.setOutline(status: .focused)
-                }
-            case .focused:
-                self.text = "abc1234"
-                self.setOutline(status: .focused)
-                self.textField.clearButtonMode = .always
-            case .error:
-                self.text = "abc1234abc1234abc1234abc1234abc1234abc1234"
-                self.setError(isOn: true, errorMsg: "에러 메시지")
-            case .disabled:
-                self.text = "abc1234abc1234abc1234abc1234abc1234abc1234"
-                self.setOutline(status: .disabled)
+        if (self.isOnError && status != .error) {
+            self.setError(isOn: false)
         }
+        
     }
     
     /// Error Text 를 수동으로 노출시키거나 제거할 때 사용됩니다
@@ -339,7 +316,7 @@ public extension MKTextField {
             self.updateStatus()
             
         }
-        
+        self.isOnError = isOn
         self.setHeight()
     }
     
@@ -393,19 +370,13 @@ extension MKTextField {
             self.bottomAreaContentView.isHidden = true
         }
         
-//        self.constraints.forEach { (constraint) in
-//            if constraint.firstAttribute == .height {
-//                constraint.constant = expectHeight
-//            }
-//            else {
-//                NSLayoutConstraint.activate([
-//                    self.heightAnchor.constraint(equalToConstant: expectHeight)
-//                ])
-//
-//            }
-//        }
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.heightAnchor.constraint(equalToConstant: expectHeight).isActive = true
+        if let heightConst = self.constraints.filter({ $0.firstAttribute == .height }).first {
+            heightConst.constant = expectHeight
+        }
+        else {
+            self.heightAnchor.constraint(equalToConstant: expectHeight).isActive = true
+        }
         
         if self.viewHeight != expectHeight {
             self.updateTableViewHeight()
@@ -423,10 +394,22 @@ extension MKTextField {
     
     private func setOutline(status: TextFieldStatus) {
         if self.options.inputType == .outLine {
-            self.textFieldBgView.toCornerRound(corners: [.allCorners], radius: 8.0, borderColor: UIColor.setColorSet(status.outLine), backgroundColor: UIColor.setColorSet(.grey50), borderWidth: 1.0)
+            self.textFieldBgView.toCornerRound(
+                corners: [.allCorners],
+                radius: 8.0,
+                borderColor: UIColor.setColorSet(status.outLine),
+                backgroundColor: UIColor.setColorSet(.textfield_bg),
+                borderWidth: 1.0
+            )
         }
         else {
-            self.textFieldBgView.toCornerRound(corners: [.allCorners], radius: 8.0, borderColor: UIColor.setColorSet(status.fill.outline), backgroundColor: UIColor.setColorSet(status.fill.background), borderWidth: 1.0)
+            self.textFieldBgView.toCornerRound(
+                corners: [.allCorners],
+                radius: 8.0,
+                borderColor: UIColor.setColorSet(status.fill.outline),
+                backgroundColor: UIColor.setColorSet(status.fill.background),
+                borderWidth: 0.5
+            )
         }
         
     }
@@ -459,10 +442,9 @@ extension MKTextField {
         
         self.counterLabel.translatesAutoresizingMaskIntoConstraints = false
         let counterLabelConstraints = [
-            titleLabel.topAnchor.constraint(equalTo: counterLabel.superview!.topAnchor, constant: 0),
-            titleLabel.leftAnchor.constraint(equalTo: counterLabel.superview!.leftAnchor, constant: 0),
-            titleLabel.rightAnchor.constraint(equalTo: counterLabel.superview!.rightAnchor, constant: 0),
-            titleLabel.bottomAnchor.constraint(equalTo: counterLabel.superview!.bottomAnchor, constant: 0)
+            counterLabel.topAnchor.constraint(equalTo: counterLabel.superview!.topAnchor, constant: 0),
+            counterLabel.rightAnchor.constraint(equalTo: counterLabel.superview!.rightAnchor, constant: 0),
+            counterLabel.bottomAnchor.constraint(equalTo: counterLabel.superview!.bottomAnchor, constant: 0)
         ]
         NSLayoutConstraint.activate(counterLabelConstraints)
         
@@ -589,7 +571,7 @@ extension MKTextField {
     
     // MARK: - TextField Editing Observer
     @objc private func textFieldTextDidBeginEditing(notification : NSNotification) {
-        self.textFieldStatus = .focused
+        self.textFieldStatus = .activate
         self.delegate?.textFieldTextDidBeginEditing?(self)
     }
     
@@ -640,7 +622,7 @@ extension MKTextField {
     
     private func updateStatus() {
         if self.textField.isFirstResponder {
-            self.textFieldStatus = .focused
+            self.textFieldStatus = .activate
         }
         else {
             if self.textField.hasText {
@@ -658,7 +640,7 @@ extension MKTextField: UITextFieldDelegate {
     
     /// Textfield를 직접적으로 Overriding 할 수는 있으나 delegate 로 제공되는 `textFieldShouldReturn` 를 쓰기 권장합니다
     public func textFieldShouldClear(_ textField: UITextField) -> Bool {
-        let v = self.delegate?.textFieldShouldReturn?(self)
+        let v = self.delegate?.textFieldShouldClear?(self)
         return v ?? true
         
     }

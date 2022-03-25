@@ -7,7 +7,6 @@ import Foundation
 
 @objc public enum TextFieldStatus: Int, CaseIterable {
     case normal // inActivate 인풋이 채워지지 않은 상태
-    case focused
     case activate // 인풋이 채워진 상태
     case error
     case disabled
@@ -15,10 +14,10 @@ import Foundation
     
     var outLine: Colors {
         switch self {
-            case .normal, .activate:
+            case .normal:
                 return .grey500
 
-            case .focused:
+            case .activate:
                 return .purple500
 
             case .error:
@@ -29,23 +28,20 @@ import Foundation
         }
     }
     
-    var fill: SelectBoxStatusModel {
+    var fill: TextFieldStatusModel {
         switch self {
                 
             case .normal:
-                return SelectBoxStatusModel(outline: .grey600, background: .grey300)
-
-            case .focused:
-                return SelectBoxStatusModel(outline: .grey600, background: .grey300)
+                return TextFieldStatusModel(outline: .grey600, background: .textfield_bg)
 
             case .activate:
-                return SelectBoxStatusModel(outline: .purple500, background: .grey300)
+                return TextFieldStatusModel(outline: .purple500, background: .textfield_bg)
 
             case .error:
-                return SelectBoxStatusModel(outline: .grey600, background: .red)
+                return TextFieldStatusModel(outline: .grey600, background: .red)
 
             case .disabled:
-                return SelectBoxStatusModel(outline: .grey600, background: .grey500)
+                return TextFieldStatusModel(outline: .grey600, background: .textfield_bg)
         }
     }
     

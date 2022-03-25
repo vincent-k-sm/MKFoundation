@@ -234,35 +234,6 @@ public extension MKSelectBox {
         
     }
     
-    
-    /// UITest 및 예제용 함수입니다
-    @available(*, deprecated, message: "This Method is Not Logical - Only use for Test")
-    func setSelectBoxStatus(status: SelectBoxStatus, forceFocus: Bool) {
-        self.selectBoxStatus = status
-        switch status {
-                
-            case .normal:
-                if forceFocus {
-                    self.selectBoxStatus = .focused
-                    self.setOutline(status: .focused)
-                }
-            case .activate:
-                self.text = "abc1234abc1234abc1234abc1234abc1234abc1234"
-                if forceFocus {
-                    self.setOutline(status: .focused)
-                }
-            case .focused:
-                self.text = "abc1234"
-                self.setOutline(status: .focused)
-            case .error:
-                self.text = "abc1234abc1234abc1234abc1234abc1234abc1234"
-                self.setError(isOn: true, errorMsg: "에러 메시지")
-            case .disabled:
-                self.text = "abc1234abc1234abc1234abc1234abc1234abc1234"
-                self.setOutline(status: .disabled)
-        }
-    }
-    
     /// Error Text 를 수동으로 노출시키거나 제거할 때 사용됩니다
     /// View (Cell) 높이는 자동으로 업데이트 됩니다
     /// - Parameters:
@@ -352,10 +323,22 @@ extension MKSelectBox {
     private func setOutline(status: SelectBoxStatus) {
         
         if self.options.inputType == .outLine {
-            self.textFieldBgView.toCornerRound(corners: [.allCorners], radius: 8.0, borderColor: UIColor.setColorSet(status.outLine), backgroundColor: .white, borderWidth: 1.0)
+            self.textFieldBgView.toCornerRound(
+                corners: [.allCorners],
+                radius: 8.0,
+                borderColor: UIColor.setColorSet(status.outLine),
+                backgroundColor: UIColor.setColorSet(.textfield_bg),
+                borderWidth: 1.0
+            )
         }
         else {
-            self.textFieldBgView.toCornerRound(corners: [.allCorners], radius: 8.0, borderColor: UIColor.setColorSet(status.fill.outline), backgroundColor: UIColor.setColorSet(status.fill.background), borderWidth: 1.0)
+            self.textFieldBgView.toCornerRound(
+                corners: [.allCorners],
+                radius: 8.0,
+                borderColor: UIColor.setColorSet(status.fill.outline),
+                backgroundColor: UIColor.setColorSet(status.fill.background),
+                borderWidth: 0.5
+            )
         }
         
     }

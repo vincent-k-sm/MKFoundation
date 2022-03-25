@@ -82,6 +82,10 @@ extension ExampleListCoordinator: ExampleListCoordinatorAction {
             case .selectBox:
                 let impl = SelectBoxListCoordinatorImplementation()
                 self.coordinate(to: .selectBoxList(impl))
+                
+            case .textField:
+                let impl = TextFieldListCoordinatorImplementation()
+                self.coordinate(to: .textfieldList(impl))
         }
         
     }
