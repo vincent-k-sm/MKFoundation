@@ -9,6 +9,7 @@ enum FoundationTypes: CaseIterable {
     case buttons
     case selectBox
     case textField
+    case textView
 }
 
 extension FoundationTypes {
@@ -22,6 +23,9 @@ extension FoundationTypes {
                 
             case .textField:
                 return "텍스트 필드"
+                
+            case .textView:
+                return "텍스트 뷰"
         }
     }
 }

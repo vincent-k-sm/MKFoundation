@@ -11,6 +11,18 @@ import Foundation
     case error
     case disabled
     
+    public var info: String {
+        switch self {
+            case .normal:
+                return "Normal"
+            case .activate:
+                return "Active"
+            case .error:
+                return "Error"
+            case .disabled:
+                return "disabled"
+        }
+    }
     
     var outLine: Colors {
         switch self {
