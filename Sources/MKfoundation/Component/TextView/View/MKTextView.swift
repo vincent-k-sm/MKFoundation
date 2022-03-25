@@ -233,17 +233,17 @@ open class MKTextView: UIView {
         set {
             self._textViewStatus = newValue
             self.setOutline(status: newValue)
-            self.settextViewEnable(status: newValue)
+            self.setTextViewEnable(status: newValue)
         }
     }
     
     /// When Automatically useable Count Limitted Error Message
     /// - Note : Can Use either delegate?.textViewLimitted
     private(set) var isTextCountLimitted: Bool = false {
-        didSet {
+        willSet {
             /// 최대 글자수 도달 시 자동으로 출력되는 메시지가 설정되어있는 경우
             if let msg = self.options.autoLimitCountErrorMessage, !msg.isEmpty {
-                self.setError(isOn: oldValue, errorMsg: msg)
+                self.setError(isOn: newValue, errorMsg: msg)
             }
             
         }
@@ -542,7 +542,7 @@ extension MKTextView {
 // MARK: - DATA
 extension MKTextView {
     
-    private func settextViewEnable(status: TextViewStatus) {
+    private func setTextViewEnable(status: TextViewStatus) {
         self.textView.isUserInteractionEnabled = status != .disabled
         
     }

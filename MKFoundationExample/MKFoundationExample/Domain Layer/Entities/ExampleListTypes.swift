@@ -10,6 +10,7 @@ enum FoundationTypes: CaseIterable {
     case selectBox
     case textField
     case textView
+    case `switch`
 }
 
 extension FoundationTypes {
@@ -26,6 +27,9 @@ extension FoundationTypes {
                 
             case .textView:
                 return "텍스트 뷰"
+                
+            case .switch:
+                return "스위치"
         }
     }
 }
