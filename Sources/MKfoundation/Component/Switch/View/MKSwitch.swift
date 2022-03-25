@@ -47,8 +47,9 @@ public class MKSwitch: UIView {
     
     private var buttonLeftConstraint: NSLayoutConstraint!
     public weak var delegate: SwitchDelegate?
-    private var offCenterPosition: CGFloat!
-    private var onCenterPosition: CGFloat!
+    
+    private var offCenterPosition: CGFloat = SwitchConstants.viewHeight * 0.1
+    private var onCenterPosition: CGFloat = SwitchConstants.viewWidth - (SwitchConstants.viewHeight * 0.9)
     
     public init() {
         super.init(frame: CGRect(x: 0, y: 0, width: SwitchConstants.viewWidth, height: SwitchConstants.viewHeight))
@@ -103,11 +104,7 @@ public class MKSwitch: UIView {
 // MARK: - UI
 extension MKSwitch {
     private func setUI() {
-        self.button = UIButton(type: .custom)
         self.addSubview(button)
-        
-        self.offCenterPosition = SwitchConstants.viewHeight * 0.1
-        self.onCenterPosition = SwitchConstants.viewWidth - (SwitchConstants.viewHeight * 0.9)
     }
     
     private func initLayout() {

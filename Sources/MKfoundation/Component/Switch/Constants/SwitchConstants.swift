@@ -17,12 +17,12 @@ public struct SwitchConstants {
     static let circleHeight: CGFloat = 24
     /// 버튼 길이
     static let circleWidth: CGFloat = 24
-    /// 활성화 켜졌을 경우 배경 색
+    /// 활성화 + 켜졌을 경우 배경 색
     static let enableOnBackgroundColor: UIColor = UIColor.setColorSet(.purple500)
-    /// 활성화 꺼졌을 경우 배경 색
+    /// 활성화 + 꺼졌을 경우 배경 색
     static let enableOffBackgroundColor: UIColor = UIColor.setColorSet(.grey100)
-    /// 비 활성화 켜졌을 경우 배경 색
-    static let disableOnBackgroundColor: UIColor = UIColor.setColorSet(.purple300)
-    /// 비 활성화 꺼졌을 경우 배경 색
-    static let disableOffBackgroundColor: UIColor = UIColor.setColorSet(.grey50)
+    /// 비 활성화 + 켜졌을 경우 배경 색
+    static let disableOnBackgroundColor: UIColor = UIColor.setColorSet(.grey300)
+    /// 비 활성화 + 꺼졌을 경우 배경 색
+    static let disableOffBackgroundColor: UIColor = UIColor.setColorSet(.grey300)
 }

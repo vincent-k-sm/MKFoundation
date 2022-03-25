@@ -313,11 +313,11 @@ CURRENT_PATH="$(find $PWD -type d -name "$SCENE_FOLDER")"
 echo $CURRENT_PATH
 echo "Copying $SCENE_FOLDER Scene to $LAYER_FOLDER Folder .."
 sudo mv -v "$CURRENT_PATH" "$RESULT_PATH/"
-rm $SCENE_FOLDER
+
 
 echo " "
 echo "Open $LAYER_FOLDER Folder "
-cd "$RESULT_PATH"
+cd "$RESULT_PATH/$SCENE_FOLDER"
 open .
 
 echo " "

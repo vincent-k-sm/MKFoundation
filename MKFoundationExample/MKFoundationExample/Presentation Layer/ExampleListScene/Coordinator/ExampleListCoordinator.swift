@@ -90,6 +90,10 @@ extension ExampleListCoordinator: ExampleListCoordinatorAction {
             case .textView:
                 let impl = TextViewListCoordinatorImplementation()
                 self.coordinate(to: .textViewList(impl))
+                
+            case .switch:
+                let impl = SwitchListCoordinatorImplementation()
+                self.coordinate(to: .switchList(impl))
         }
         
     }
