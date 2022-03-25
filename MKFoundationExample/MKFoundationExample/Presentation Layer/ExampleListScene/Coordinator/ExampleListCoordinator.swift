@@ -94,6 +94,10 @@ extension ExampleListCoordinator: ExampleListCoordinatorAction {
             case .switch:
                 let impl = SwitchListCoordinatorImplementation()
                 self.coordinate(to: .switchList(impl))
+                
+            case .checkBox:
+                let impl = CheckBoxListCoordinatorImplementation()
+                self.coordinate(to: .checkBoxList(impl))
         }
         
     }

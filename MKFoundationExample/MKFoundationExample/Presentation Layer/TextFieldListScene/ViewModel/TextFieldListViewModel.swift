@@ -55,8 +55,6 @@ extension TextFieldListViewModel {
     private func fetchItems() {
         self.dataSource.initSnapShot()
         
-//        self.dataSource.snapshot.appendSections(SelectBoxStatus.allCases)
-        
         TextFieldStatus.allCases.forEach { status in
             self.dataSource.snapshot.appendSections([status])
             self.addItems(status: status)

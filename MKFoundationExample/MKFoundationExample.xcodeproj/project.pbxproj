@@ -22,6 +22,11 @@
 		4D364DE927EE716B00D33545 /* SwitchListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D364DE627EE716B00D33545 /* SwitchListViewController.swift */; };
 		4D364DEB27EE726A00D33545 /* SwitchListDiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D364DEA27EE726A00D33545 /* SwitchListDiffableDataSource.swift */; };
 		4D364DEE27EE739900D33545 /* SwitchListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D364DED27EE739900D33545 /* SwitchListCell.swift */; };
+		4D364DF627EE7EC800D33545 /* CheckBoxListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D364DF127EE7EC800D33545 /* CheckBoxListViewModel.swift */; };
+		4D364DF727EE7EC800D33545 /* CheckBoxListCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D364DF327EE7EC800D33545 /* CheckBoxListCoordinator.swift */; };
+		4D364DF827EE7EC800D33545 /* CheckBoxListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D364DF527EE7EC800D33545 /* CheckBoxListViewController.swift */; };
+		4D364DFA27EE7FA100D33545 /* CheckBoxListDiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D364DF927EE7FA100D33545 /* CheckBoxListDiffableDataSource.swift */; };
+		4D364DFD27EE801C00D33545 /* CheckBoxListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D364DFC27EE801C00D33545 /* CheckBoxListCell.swift */; };
 		4D53425727EC0FCA0070D823 /* SelectBoxListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D53425227EC0FCA0070D823 /* SelectBoxListViewModel.swift */; };
 		4D53425827EC0FCA0070D823 /* SelectBoxListCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D53425427EC0FCA0070D823 /* SelectBoxListCoordinator.swift */; };
 		4D53425927EC0FCA0070D823 /* SelectBoxListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D53425627EC0FCA0070D823 /* SelectBoxListViewController.swift */; };
@@ -67,6 +72,11 @@
 		4D364DE627EE716B00D33545 /* SwitchListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchListViewController.swift; sourceTree = "<group>"; };
 		4D364DEA27EE726A00D33545 /* SwitchListDiffableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchListDiffableDataSource.swift; sourceTree = "<group>"; };
 		4D364DED27EE739900D33545 /* SwitchListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchListCell.swift; sourceTree = "<group>"; };
+		4D364DF127EE7EC800D33545 /* CheckBoxListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckBoxListViewModel.swift; sourceTree = "<group>"; };
+		4D364DF327EE7EC800D33545 /* CheckBoxListCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckBoxListCoordinator.swift; sourceTree = "<group>"; };
+		4D364DF527EE7EC800D33545 /* CheckBoxListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckBoxListViewController.swift; sourceTree = "<group>"; };
+		4D364DF927EE7FA100D33545 /* CheckBoxListDiffableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBoxListDiffableDataSource.swift; sourceTree = "<group>"; };
+		4D364DFC27EE801C00D33545 /* CheckBoxListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBoxListCell.swift; sourceTree = "<group>"; };
 		4D53425227EC0FCA0070D823 /* SelectBoxListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectBoxListViewModel.swift; sourceTree = "<group>"; };
 		4D53425427EC0FCA0070D823 /* SelectBoxListCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectBoxListCoordinator.swift; sourceTree = "<group>"; };
 		4D53425627EC0FCA0070D823 /* SelectBoxListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectBoxListViewController.swift; sourceTree = "<group>"; };
@@ -250,6 +260,50 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		4D364DEF27EE7EC800D33545 /* CheckBoxListScene */ = {
+			isa = PBXGroup;
+			children = (
+				4D364DF027EE7EC800D33545 /* ViewModel */,
+				4D364DF227EE7EC800D33545 /* Coordinator */,
+				4D364DF427EE7EC800D33545 /* View */,
+			);
+			path = CheckBoxListScene;
+			sourceTree = "<group>";
+		};
+		4D364DF027EE7EC800D33545 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				4D364DF127EE7EC800D33545 /* CheckBoxListViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		4D364DF227EE7EC800D33545 /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				4D364DF327EE7EC800D33545 /* CheckBoxListCoordinator.swift */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		4D364DF427EE7EC800D33545 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4D364DFB27EE801800D33545 /* Cells */,
+				4D364DF527EE7EC800D33545 /* CheckBoxListViewController.swift */,
+				4D364DF927EE7FA100D33545 /* CheckBoxListDiffableDataSource.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		4D364DFB27EE801800D33545 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				4D364DFC27EE801C00D33545 /* CheckBoxListCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		4D53425027EC0FCA0070D823 /* SelectBoxListScene */ = {
 			isa = PBXGroup;
 			children = (
@@ -370,6 +424,7 @@
 		4DD8FB9227EB4D26009CCFF6 /* Presentation Layer */ = {
 			isa = PBXGroup;
 			children = (
+				4D364DEF27EE7EC800D33545 /* CheckBoxListScene */,
 				4D364DE027EE716B00D33545 /* SwitchListScene */,
 				4D364DD127EDBE7400D33545 /* TextViewListScene */,
 				4D364DC027EDA84100D33545 /* TextFieldListScene */,
@@ -587,11 +642,13 @@
 				4DD8FBBE27EB76FE009CCFF6 /* ButtonListDiffableDataSource.swift in Sources */,
 				4D364DEE27EE739900D33545 /* SwitchListCell.swift in Sources */,
 				4D364DE827EE716B00D33545 /* SwitchListCoordinator.swift in Sources */,
+				4D364DF727EE7EC800D33545 /* CheckBoxListCoordinator.swift in Sources */,
 				4D53425827EC0FCA0070D823 /* SelectBoxListCoordinator.swift in Sources */,
 				4DD8FBAE27EB68EE009CCFF6 /* ExampleListCell.swift in Sources */,
 				4DD8FB9527EB4D43009CCFF6 /* BaseViewController.swift in Sources */,
 				4D364DDF27EDC00700D33545 /* TextViewListCell.swift in Sources */,
 				4D364DDA27EDBE7400D33545 /* TextViewListViewController.swift in Sources */,
+				4D364DF827EE7EC800D33545 /* CheckBoxListViewController.swift in Sources */,
 				4D53425727EC0FCA0070D823 /* SelectBoxListViewModel.swift in Sources */,
 				4D364DC927EDA84100D33545 /* TextFieldListViewController.swift in Sources */,
 				4DD8FB8C27EB4921009CCFF6 /* AppCoordinator.swift in Sources */,
@@ -612,11 +669,14 @@
 				4D53425D27EC12120070D823 /* SelectBoxListCell.swift in Sources */,
 				4DD8FBBA27EB769C009CCFF6 /* ButtonListViewModel.swift in Sources */,
 				4DD8FBC127EB7858009CCFF6 /* ButtonCell.swift in Sources */,
+				4D364DF627EE7EC800D33545 /* CheckBoxListViewModel.swift in Sources */,
 				4DD8FBA027EB5B0E009CCFF6 /* ExampleListViewModel.swift in Sources */,
 				4D53425B27EC10FE0070D823 /* SelectBoxListDiffableDataSource.swift in Sources */,
 				4D53426027EC1EF90070D823 /* CommonListHeaderView.swift in Sources */,
 				4DD8FBB227EB6BE5009CCFF6 /* ExampleListViewController+Datasource.swift in Sources */,
 				4DD8FB9727EB4DF3009CCFF6 /* BaseViewModel.swift in Sources */,
+				4D364DFD27EE801C00D33545 /* CheckBoxListCell.swift in Sources */,
+				4D364DFA27EE7FA100D33545 /* CheckBoxListDiffableDataSource.swift in Sources */,
 				4D364DCE27EDAB0E00D33545 /* TextFieldListCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

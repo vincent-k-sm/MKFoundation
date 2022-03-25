@@ -95,7 +95,7 @@ extension MKCheckBox {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         let titleLabelConstraints = [
             titleLabel.topAnchor.constraint(equalTo: titleLabel.superview!.topAnchor, constant: 0),
-            titleLabel.leftAnchor.constraint(equalTo: symbolImageView.superview!.rightAnchor, constant: 20),
+            titleLabel.leftAnchor.constraint(equalTo: symbolImageView.rightAnchor, constant: 20),
             titleLabel.rightAnchor.constraint(equalTo: titleLabel.superview!.rightAnchor, constant: -20),
             titleLabel.bottomAnchor.constraint(equalTo: titleLabel.superview!.bottomAnchor, constant: 0)
         ]
