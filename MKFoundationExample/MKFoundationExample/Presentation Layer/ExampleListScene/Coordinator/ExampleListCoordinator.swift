@@ -86,6 +86,10 @@ extension ExampleListCoordinator: ExampleListCoordinatorAction {
             case .textField:
                 let impl = TextFieldListCoordinatorImplementation()
                 self.coordinate(to: .textfieldList(impl))
+                
+            case .textView:
+                let impl = TextViewListCoordinatorImplementation()
+                self.coordinate(to: .textViewList(impl))
         }
         
     }

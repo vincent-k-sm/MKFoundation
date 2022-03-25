@@ -12,6 +12,11 @@
 		4D364DC927EDA84100D33545 /* TextFieldListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D364DC627EDA84100D33545 /* TextFieldListViewController.swift */; };
 		4D364DCB27EDA91100D33545 /* TextFieldListDiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D364DCA27EDA91100D33545 /* TextFieldListDiffableDataSource.swift */; };
 		4D364DCE27EDAB0E00D33545 /* TextFieldListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D364DCD27EDAB0E00D33545 /* TextFieldListCell.swift */; };
+		4D364DD827EDBE7400D33545 /* TextViewListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D364DD327EDBE7400D33545 /* TextViewListViewModel.swift */; };
+		4D364DD927EDBE7400D33545 /* TextViewListCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D364DD527EDBE7400D33545 /* TextViewListCoordinator.swift */; };
+		4D364DDA27EDBE7400D33545 /* TextViewListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D364DD727EDBE7400D33545 /* TextViewListViewController.swift */; };
+		4D364DDC27EDBED700D33545 /* TextViewListDiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D364DDB27EDBED700D33545 /* TextViewListDiffableDataSource.swift */; };
+		4D364DDF27EDC00700D33545 /* TextViewListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D364DDE27EDC00700D33545 /* TextViewListCell.swift */; };
 		4D53425727EC0FCA0070D823 /* SelectBoxListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D53425227EC0FCA0070D823 /* SelectBoxListViewModel.swift */; };
 		4D53425827EC0FCA0070D823 /* SelectBoxListCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D53425427EC0FCA0070D823 /* SelectBoxListCoordinator.swift */; };
 		4D53425927EC0FCA0070D823 /* SelectBoxListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D53425627EC0FCA0070D823 /* SelectBoxListViewController.swift */; };
@@ -47,6 +52,11 @@
 		4D364DC627EDA84100D33545 /* TextFieldListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldListViewController.swift; sourceTree = "<group>"; };
 		4D364DCA27EDA91100D33545 /* TextFieldListDiffableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldListDiffableDataSource.swift; sourceTree = "<group>"; };
 		4D364DCD27EDAB0E00D33545 /* TextFieldListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldListCell.swift; sourceTree = "<group>"; };
+		4D364DD327EDBE7400D33545 /* TextViewListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextViewListViewModel.swift; sourceTree = "<group>"; };
+		4D364DD527EDBE7400D33545 /* TextViewListCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextViewListCoordinator.swift; sourceTree = "<group>"; };
+		4D364DD727EDBE7400D33545 /* TextViewListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextViewListViewController.swift; sourceTree = "<group>"; };
+		4D364DDB27EDBED700D33545 /* TextViewListDiffableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewListDiffableDataSource.swift; sourceTree = "<group>"; };
+		4D364DDE27EDC00700D33545 /* TextViewListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewListCell.swift; sourceTree = "<group>"; };
 		4D53425227EC0FCA0070D823 /* SelectBoxListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectBoxListViewModel.swift; sourceTree = "<group>"; };
 		4D53425427EC0FCA0070D823 /* SelectBoxListCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectBoxListCoordinator.swift; sourceTree = "<group>"; };
 		4D53425627EC0FCA0070D823 /* SelectBoxListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectBoxListViewController.swift; sourceTree = "<group>"; };
@@ -134,17 +144,54 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
-		4D364DCF27EDAB8D00D33545 /* New Group */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "New Group";
-			sourceTree = "<group>";
-		};
 		4D364DD027EDABA400D33545 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
 				4D53425F27EC1EF90070D823 /* CommonListHeaderView.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		4D364DD127EDBE7400D33545 /* TextViewListScene */ = {
+			isa = PBXGroup;
+			children = (
+				4D364DD227EDBE7400D33545 /* ViewModel */,
+				4D364DD427EDBE7400D33545 /* Coordinator */,
+				4D364DD627EDBE7400D33545 /* View */,
+			);
+			path = TextViewListScene;
+			sourceTree = "<group>";
+		};
+		4D364DD227EDBE7400D33545 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				4D364DD327EDBE7400D33545 /* TextViewListViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		4D364DD427EDBE7400D33545 /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				4D364DD527EDBE7400D33545 /* TextViewListCoordinator.swift */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		4D364DD627EDBE7400D33545 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4D364DDD27EDBFFB00D33545 /* Cells */,
+				4D364DD727EDBE7400D33545 /* TextViewListViewController.swift */,
+				4D364DDB27EDBED700D33545 /* TextViewListDiffableDataSource.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		4D364DDD27EDBFFB00D33545 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				4D364DDE27EDC00700D33545 /* TextViewListCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -269,7 +316,7 @@
 		4DD8FB9227EB4D26009CCFF6 /* Presentation Layer */ = {
 			isa = PBXGroup;
 			children = (
-				4D364DCF27EDAB8D00D33545 /* New Group */,
+				4D364DD127EDBE7400D33545 /* TextViewListScene */,
 				4D364DC027EDA84100D33545 /* TextFieldListScene */,
 				4D53425027EC0FCA0070D823 /* SelectBoxListScene */,
 				4DD8FBB327EB769C009CCFF6 /* ButtonListScene */,
@@ -480,10 +527,14 @@
 			files = (
 				4DD8FBA227EB5B0E009CCFF6 /* ExampleListViewController.swift in Sources */,
 				4D364DCB27EDA91100D33545 /* TextFieldListDiffableDataSource.swift in Sources */,
+				4D364DD827EDBE7400D33545 /* TextViewListViewModel.swift in Sources */,
+				4D364DDC27EDBED700D33545 /* TextViewListDiffableDataSource.swift in Sources */,
 				4DD8FBBE27EB76FE009CCFF6 /* ButtonListDiffableDataSource.swift in Sources */,
 				4D53425827EC0FCA0070D823 /* SelectBoxListCoordinator.swift in Sources */,
 				4DD8FBAE27EB68EE009CCFF6 /* ExampleListCell.swift in Sources */,
 				4DD8FB9527EB4D43009CCFF6 /* BaseViewController.swift in Sources */,
+				4D364DDF27EDC00700D33545 /* TextViewListCell.swift in Sources */,
+				4D364DDA27EDBE7400D33545 /* TextViewListViewController.swift in Sources */,
 				4D53425727EC0FCA0070D823 /* SelectBoxListViewModel.swift in Sources */,
 				4D364DC927EDA84100D33545 /* TextFieldListViewController.swift in Sources */,
 				4DD8FB8C27EB4921009CCFF6 /* AppCoordinator.swift in Sources */,
@@ -495,6 +546,7 @@
 				4DD8FBBC27EB769C009CCFF6 /* ButtonListViewController.swift in Sources */,
 				4DD8FBA127EB5B0E009CCFF6 /* ExampleListCoordinator.swift in Sources */,
 				4DD8FB9027EB4969009CCFF6 /* Coordinator+FlowType.swift in Sources */,
+				4D364DD927EDBE7400D33545 /* TextViewListCoordinator.swift in Sources */,
 				4DD8FBA827EB6800009CCFF6 /* ExampleListTypes.swift in Sources */,
 				4DD8FB7027EB468E009CCFF6 /* AppDelegate.swift in Sources */,
 				4D53425D27EC12120070D823 /* SelectBoxListCell.swift in Sources */,

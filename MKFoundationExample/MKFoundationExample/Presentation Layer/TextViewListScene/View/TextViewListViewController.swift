@@ -1,5 +1,5 @@
 // 
-// TextFieldListViewController.swift
+// TextViewListViewController.swift
 // 
 
 import Combine
@@ -7,8 +7,8 @@ import UIKit
 import MKFoundation
 import SnapKit
 
-class TextFieldListViewController: BaseViewController<TextFieldListViewModel> {
-    
+class TextViewListViewController: BaseViewController<TextViewListViewModel> {
+
     var cancelables: Set<AnyCancellable> = []
     var isOutLine: Bool = true
     
@@ -31,7 +31,7 @@ class TextFieldListViewController: BaseViewController<TextFieldListViewModel> {
         v.rowHeight = UITableView.automaticDimension
         v.separatorStyle = .singleLine
         v.removeEventDelay()
-        v.registerCell(type: TextFieldListCell.self)
+        v.registerCell(type: TextViewListCell.self)
         v.registerCell(type: CommonListHeaderView.self)
         v.delegate = self
         return v
@@ -51,7 +51,7 @@ class TextFieldListViewController: BaseViewController<TextFieldListViewModel> {
     }
 }
 
-extension TextFieldListViewController {
+extension TextViewListViewController {
     private func setUI() {
         self.view.backgroundColor = UIColor.setColorSet(.background)
         
@@ -107,23 +107,23 @@ extension TextFieldListViewController {
     }
 }
 
-extension TextFieldListViewController {
+extension TextViewListViewController {
     private func bindViewModel() {
-        self.viewModel.dataSource = TextFieldListDiffableDataSource(
+        self.viewModel.dataSource = TextViewListDiffableDataSource(
             tableView: self.tableView,
             cellProvider: { [weak self] (tableView, _, item) in
                 guard let self = self else { return UITableViewCell() }
                 let cell: UITableViewCell
-                let customCell = self.tableView.dequeueCell(withType: TextFieldListCell.self) as! TextFieldListCell
+                let customCell = self.tableView.dequeueCell(withType: TextViewListCell.self) as! TextViewListCell
                 
                 switch item {
                     case let .item(option, status):
                         var op = option
                         op.inputType = self.isOutLine ? .outLine : .fill
                         
-                        customCell.mkTextField.configure(option: op)
+                        customCell.mkTextView.configure(option: op, tableView: tableView)
                         
-                        customCell.mkTextField.setTextfieldStatus(status: status)
+                        customCell.mkTextView.setTextViewStatus(status: status)
                 }
                 cell = customCell
                 
@@ -132,16 +132,16 @@ extension TextFieldListViewController {
     }
 }
 
-extension TextFieldListViewController {
+extension TextViewListViewController {
     private func bindEvent() {
 
     }
 }
 
-extension TextFieldListViewController: UITableViewDelegate {
+extension TextViewListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view: UIView?
-        guard let section = TextFieldStatus(rawValue: section) else { return UIView() }
+        guard let section = TextViewStatus(rawValue: section) else { return UIView() }
         let customView = self.tableView.dequeueCell(withType: CommonListHeaderView.self) as! CommonListHeaderView
         customView.titleLabel.text = "\(section.info)"
         view = customView
@@ -156,8 +156,8 @@ extension TextFieldListViewController: UITableViewDelegate {
     }
 }
 
-extension TextFieldListViewController {
+extension TextViewListViewController {
     private struct Appearance {
-        static let title = "TextField"
+        static let title = "TextView"
     }
 }

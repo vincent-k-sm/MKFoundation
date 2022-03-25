@@ -15,7 +15,8 @@ import UIKit
 ///   - title: 텍스트 필드 제목 영역 입니다 적용 시 최대 높이가 변경됩니다
 ///   - helperText: 하단 설명 영역입니다 적용 시 최대 높이가 변경됩니다
 ///   - counter: 상단 카운트 설정 여부입니다 적용 시 최대 높이가 변경됩니다
-///   - leadingIcon : 좌측 이미지 심볼을 적용합니다  이미지가 있는 경우 레이아웃이 변경됩니다
+///   - doneAccessory : 키보드의 닫기 버튼을 추가합니다
+///   - clearAccessory : 텍스트 뷰를 클리어하는 버튼이 사용됩니다
 public struct MKTextViewOptions {
     public var textViewHeight: CGFloat              = 0.0
     public var inputType: TextViewTypes             = .outLine
@@ -54,4 +55,32 @@ public struct MKTextViewOptions {
         self.clearAccessory             = clearAccessory
     }
     
+}
+
+extension MKTextViewOptions: Hashable, Equatable {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.textViewHeight         == rhs.textViewHeight
+        && lhs.inputType                  == rhs.inputType
+        && lhs.placeHolder                == rhs.placeHolder
+        && lhs.limitCount                 == rhs.limitCount
+        && lhs.autoLimitCountErrorMessage == rhs.autoLimitCountErrorMessage
+        && lhs.title                      == rhs.title
+        && lhs.helperText                 == rhs.helperText
+        && lhs.counter                    == rhs.counter
+        && lhs.doneAccessory              == rhs.doneAccessory
+        && lhs.clearAccessory             == rhs.clearAccessory
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(textViewHeight)
+        hasher.combine(inputType)
+        hasher.combine(placeHolder)
+        hasher.combine(limitCount)
+        hasher.combine(autoLimitCountErrorMessage)
+        hasher.combine(title)
+        hasher.combine(helperText)
+        hasher.combine(counter)
+        hasher.combine(doneAccessory)
+        hasher.combine(clearAccessory)
+    }
 }
