@@ -1,127 +1,134 @@
 //
-//  MKTextField.swift
+//  MKTextView.swift
 //
 
 
 import Foundation
 import UIKit
 
-open class MKTextField: UIView {
+open class MKTextView: UIView {
     /// tableview 등에서 view 높이가 변경되어야 하는 경우 사용되는 값잆니다
     private weak var tableView: UITableView?
     public private(set) var viewHeight: CGFloat = 0.0
     
-    public weak var delegate: MKTextFieldDelegate?
+    /// Default Delegate
+    public weak var delegate: MKTextViewDelegate?
     
-    /// Override Textfield
+    /// Override TextView
     @discardableResult
     open override func becomeFirstResponder() -> Bool {
-        return self.textField.becomeFirstResponder()
+        return self.textView.becomeFirstResponder()
     }
     
     @discardableResult
     open override func resignFirstResponder() -> Bool {
-        return self.textField.resignFirstResponder()
+        return self.textView.resignFirstResponder()
     }
     
-    /// Override Textfield
+    lazy var toolbar: UIToolbar = {
+       let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 44))
+        toolbar.barStyle = .default
+        return toolbar
+    }()
+    
+    /// Override TextView
     open var text: String {
         get {
-            return self.textField.text ?? ""
+            return self.textView.text ?? ""
         }
         set {
-            self.textField.text = newValue
-            self.updateCounter()
+            self.textView.text = newValue
             if self.options.limitCount < newValue.count {
-                self.validTextFieldLimitted()
+                self.validtextViewLimitted()
+            }
+            else {
+                self.delegate?.textViewTextDidChange?(self, text: newValue)
             }
             
+            self.updateCounter()
+            self.setHeight()
+    
         }
     }
-    var trimmed: Bool = false
+    /// Override TextView
+    public var selectedRange: NSRange {
+        get {
+            return self.textView.selectedRange
+        }
+        set {
+            self.textView.selectedRange = newValue
+        }
+    }
     
-    /// Override Textfield
+    /// Override TextView
     public var placeHolderText: String? {
         get {
-            return self.textField.attributedPlaceholder?.string ?? ""
+            return self.textView.placeHolderText
         }
         set {
             if let newValue = newValue {
-                self.textField.setPlaceholderText(text: newValue)
+                self.textView.setPlaceholderText(text: newValue)
             }
             else {
-                self.placeHolderAttributeString = nil
-                self.textField.placeHolderText = ""
+                self.textView.placeHolderText = ""
             }
         }
     }
     
-    /// Override Textfield
+    /// Override textView
     public var placeHolderAttributeString: NSAttributedString? {
         get {
-            return self.textField.attributedPlaceholder
-        }
-        set {
-            self.textField.attributedPlaceholder = newValue
+            return self.textView.placeHolderAttributeString
         }
     }
-    
     
     /// saved error message in `SetError` method
     public private(set) var errMessage: String = ""
     
-    /// Override Textfield
+    /// Override textView
     public var isEnabled: Bool {
         get {
-            return self.textField.isUserInteractionEnabled
+            return self.textView.isUserInteractionEnabled
         }
         set {
             if newValue {
                 self.updateStatus()
             }
             else {
-                self.textFieldStatus = .disabled
+                self.textViewStatus = .disabled
             }
             
-            self.textField.isUserInteractionEnabled = newValue
+            self.textView.isUserInteractionEnabled = newValue
         }
     }
 
-    /// Override Textfield
+    /// Override textView
     public var returnKeyType: UIReturnKeyType {
         get {
-            return self.textField.returnKeyType
+            return self.textView.returnKeyType
         }
         set {
-            self.textField.returnKeyType = newValue
+            self.textView.returnKeyType = newValue
         }
     }
     
-    /// Override Textfield
+    /// Override textView
     public var attributedText: NSAttributedString? {
         get {
-            return self.textField.attributedText
+            return self.textView.attributedText
         }
         set {
-            self.textField.attributedText = newValue
+            self.textView.attributedText = newValue
+            
         }
     }
     
-    /// Override Textfield
-    public var clearsOnBeginEditing: Bool {
-        get {
-            return self.textField.clearsOnBeginEditing
-        }
-        set {
-            self.textField.clearsOnBeginEditing = newValue
-        }
-    }
-    
-    /// Override Textfield
+    /// Override textView
     public var isEditing: Bool {
         get {
-            return self.textField.isEditing
+            return self.textView.isFirstResponder
         }
+        
     }
     
     lazy var rootStackView: UIStackView = {
@@ -162,43 +169,27 @@ open class MKTextField: UIView {
         return v
     }()
     
+    
     lazy var subStackView: UIStackView = {
         let v = UIStackView()
         v.axis = .vertical
         v.spacing = 8
         v.alignment = .fill
         v.distribution = .fill
-        v.addArrangedSubview(textFieldBgView)
+        v.addArrangedSubview(textViewBgView)
         v.addArrangedSubview(bottomAreaContentView)
         return v
     }()
     
-    lazy var leadingImageView: UIImageView = {
-        let v = UIImageView()
-        v.image = nil
-        return v
-    }()
-    
-    lazy var tfStackView: UIStackView = {
-        let v = UIStackView()
-        v.axis = .horizontal
-        v.spacing = 12
-        v.alignment = .center
-        v.distribution = .fill
-        v.addArrangedSubview(leadingImageView)
-        v.addArrangedSubview(textField)
-        return v
-    }()
-    
-    lazy open var textFieldBgView: UIView = {
+    lazy open var textViewBgView: UIView = {
         let v = UIView()
         v.backgroundColor = .clear
-        v.addSubview(tfStackView)
+        v.addSubview(textView)
         return v
     }()
     
-    lazy public var textField: MKTextFieldCore = {
-        let v = MKTextFieldCore(frame: self.bounds)
+    lazy public var textView: MKTextViewCore = {
+        let v = MKTextViewCore(frame: self.bounds)
         v.placeHolderText = self.options.placeHolder
         return v
     }()
@@ -216,7 +207,6 @@ open class MKTextField: UIView {
         v.isHidden = !self.options.counter
         v.textColor = UIColor.setColorSet(.text_disabled)
         v.font = UIFont.systemFont(ofSize: 14)
-        v.font = UIFont.systemFont(ofSize: 14)
         if let helperText = self.options.helperText {
             v.text = helperText
         }
@@ -226,34 +216,34 @@ open class MKTextField: UIView {
     lazy var errorDescriptionLabel: UILabel = {
         let v = UILabel()
         v.isHidden = !self.options.counter
-        v.textColor = UIColor.setColorSet(.text_disabled)
+        v.textColor = UIColor.setColorSet(.red)
         v.font = UIFont.systemFont(ofSize: 14)
         return v
     }()
     
-    private(set) var options: MKTextFieldOptions = MKTextFieldOptions()
+    
+    private(set) var options: MKTextViewOptions = MKTextViewOptions()
     public private(set) var isOnError: Bool = false
     
-    private var _textFieldStatus: TextFieldStatus = .normal
-    private(set) var textFieldStatus: TextFieldStatus {
+    private var _textViewStatus: TextViewStatus = .normal
+    private(set) var textViewStatus: TextViewStatus {
         get {
-            return self._textFieldStatus
+            return self._textViewStatus
         }
         set {
-            self._textFieldStatus = newValue
+            self._textViewStatus = newValue
             self.setOutline(status: newValue)
-            self.setTextFieldEnable(status: newValue)
-            self.delegate?.textFieldStatusDidChange?(self, status: newValue)
+            self.settextViewEnable(status: newValue)
         }
     }
     
     /// When Automatically useable Count Limitted Error Message
-    /// - Note : Can Use either delegate?.textFieldLimitted
+    /// - Note : Can Use either delegate?.textViewLimitted
     private(set) var isTextCountLimitted: Bool = false {
-        willSet {
+        didSet {
             /// 최대 글자수 도달 시 자동으로 출력되는 메시지가 설정되어있는 경우
             if let msg = self.options.autoLimitCountErrorMessage, !msg.isEmpty {
-                self.setError(isOn: newValue, errorMsg: msg)
+                self.setError(isOn: oldValue, errorMsg: msg)
             }
             
         }
@@ -278,21 +268,21 @@ open class MKTextField: UIView {
         self.setObservers()
     }
     
-    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
     
     public override func draw(_ rect: CGRect) {
+        
         self.setHeight()
-        self.setOutline(status: self.textFieldStatus)
+        self.setOutline(status: self.textViewStatus)
     }
     
 }
 
-public extension MKTextField {
-    func setTextfieldStatus(status: TextFieldStatus) {
-        self.textFieldStatus = status
+public extension MKTextView {
+    func setTextViewStatus(status: TextViewStatus) {
+        self.textViewStatus = status
         if (self.isOnError && status != .error) {
             self.setError(isOn: false)
         }
@@ -309,7 +299,7 @@ public extension MKTextField {
         self.helperTextLabel.isHidden = isOn
         if isOn {
             self.errMessage = errorMsg
-            self.textFieldStatus = .error
+            self.textViewStatus = .error
             self.errorDescriptionLabel.text = errorMsg
         }
         else {
@@ -320,15 +310,16 @@ public extension MKTextField {
         self.setHeight()
     }
     
-    /// SFTextField를 세팅하는 SFTextFieldOptions 입니다
+    /// MKTextView를 세팅하는 MKTextViewOptions 입니다
     /// - Parameters:
-    ///   - option: `SFTextFieldOptions` 를 참고하세요
+    ///   - option: `MKTextViewOptions` 를 참고하세요
     ///   - tableView: TableView Cell 안에 넣는 경우 적용합니다
     ///   - important:TableView를 넘기지 않는 경우 에러 메시지로 인한 텍스트 높이 변경이 수동으로 이뤄져야 합니다
     
-    func configure(option: MKTextFieldOptions, tableView: UITableView? = nil) {
+    func configure(option: MKTextViewOptions, tableView: UITableView? = nil, customToolbar: Bool = false) {
         self.tableView = tableView
         self.options = option
+        
         if let msg = options.autoLimitCountErrorMessage {
             if msg.isEmpty {
                 fatalError("autoLimitCountErrorMessage Setted but empty string")
@@ -339,19 +330,31 @@ public extension MKTextField {
         }
         self.setUI()
         self.setHeight()
-        let textFieldStatus = self._textFieldStatus
-        self.textFieldStatus = textFieldStatus
+        if !customToolbar {
+            self.setToolBar()
+        }
+        
+        let textViewStatus = self._textViewStatus
+        self.textViewStatus = textViewStatus
     }
-
     
 }
 
-
 // MARK: - UI
-extension MKTextField {
+extension MKTextView {
     private func setHeight() {
-        var expectHeight = Appearance.textFieldHeight
         
+        let size = textView.bounds.size
+        let newSize = textView.sizeThatFits(CGSize(width: size.width, height: CGFloat.greatestFiniteMagnitude))
+        var expectHeight: CGFloat = 0.0
+        
+        if self.options.textViewHeight.isZero {
+            expectHeight = (newSize.height > Appearance.textViewHeight ? newSize.height + Appearance.topBottomMargin : Appearance.textViewHeight)
+        }
+        else {
+            expectHeight = self.options.textViewHeight + Appearance.topBottomMargin
+        }
+
         // top
         if options.title != nil || options.counter == true {
             expectHeight += Appearance.topAreaHeight
@@ -362,7 +365,7 @@ extension MKTextField {
         }
         
         // bottom
-        if (self.textFieldStatus == .error && !errMessage.isEmpty) || !(options.helperText?.isEmpty ?? true) {
+        if (self.textViewStatus == .error && !errMessage.isEmpty) || !(options.helperText?.isEmpty ?? true) {
             expectHeight += Appearance.bottomAreaHeight
             self.bottomAreaContentView.isHidden = false
         }
@@ -379,40 +382,30 @@ extension MKTextField {
         }
         
         if self.viewHeight != expectHeight {
-            self.updateTableViewHeight()
+            self.updateTableViewHeight(size: size, newSize: newSize)
         }
         self.viewHeight = expectHeight
     }
     
-    
-    private func updateTableViewHeight() {
-        UIView.setAnimationsEnabled(false)
-        self.tableView?.beginUpdates()
-        self.tableView?.endUpdates()
-        UIView.setAnimationsEnabled(true)
+    private func updateTableViewHeight(size: CGSize, newSize: CGSize) {
+        if size.height != newSize.height {
+            UIView.setAnimationsEnabled(false)
+            self.tableView?.beginUpdates()
+            self.tableView?.endUpdates()
+            UIView.setAnimationsEnabled(true)
+            
+        }
     }
     
-    private func setOutline(status: TextFieldStatus) {
+    private func setOutline(status: TextViewStatus) {
         if self.options.inputType == .outLine {
-            self.textFieldBgView.toCornerRound(
-                corners: [.allCorners],
-                radius: 8.0,
-                borderColor: UIColor.setColorSet(status.outLine),
-                backgroundColor: UIColor.setColorSet(.textfield_bg),
-                borderWidth: 1.0
-            )
+            self.textViewBgView.toCornerRound(corners: [.allCorners], radius: 8.0, borderColor: UIColor.setColorSet(status.outLine), backgroundColor: UIColor.setColorSet(.grey50), borderWidth: 1.0)
         }
         else {
-            self.textFieldBgView.toCornerRound(
-                corners: [.allCorners],
-                radius: 8.0,
-                borderColor: UIColor.setColorSet(status.fill.outline),
-                backgroundColor: UIColor.setColorSet(status.fill.background),
-                borderWidth: 0.5
-            )
+            self.textViewBgView.toCornerRound(corners: [.allCorners], radius: 8.0, borderColor: UIColor.setColorSet(status.fill.outline), backgroundColor: UIColor.setColorSet(status.fill.background), borderWidth: 1.0)
         }
-        
     }
+    
     fileprivate func setLayout() {
         self.addSubview(self.rootStackView)
         
@@ -447,29 +440,15 @@ extension MKTextField {
             counterLabel.bottomAnchor.constraint(equalTo: counterLabel.superview!.bottomAnchor, constant: 0)
         ]
         NSLayoutConstraint.activate(counterLabelConstraints)
-        
-        self.tfStackView.translatesAutoresizingMaskIntoConstraints = false
-        let tfStackViewConstraints = [
-            tfStackView.topAnchor.constraint(equalTo: tfStackView.superview!.topAnchor, constant: 0),
-            tfStackView.leftAnchor.constraint(equalTo: tfStackView.superview!.leftAnchor, constant: 16),
-            tfStackView.rightAnchor.constraint(equalTo: tfStackView.superview!.rightAnchor, constant: -16),
-            tfStackView.bottomAnchor.constraint(equalTo: tfStackView.superview!.bottomAnchor, constant: 0)
-        ]
-        NSLayoutConstraint.activate(tfStackViewConstraints)
 
-        self.textField.translatesAutoresizingMaskIntoConstraints = false
-        let textFieldConstraints = [
-            textField.topAnchor.constraint(equalTo: textField.superview!.topAnchor, constant: 0),
-            textField.bottomAnchor.constraint(equalTo: textField.superview!.bottomAnchor, constant: 0)
+        self.textView.translatesAutoresizingMaskIntoConstraints = false
+        let textViewConstraints = [
+            textView.topAnchor.constraint(equalTo: textView.superview!.topAnchor, constant: 6),
+            textView.leftAnchor.constraint(equalTo: textView.superview!.leftAnchor, constant: 16),
+            textView.rightAnchor.constraint(equalTo: textView.superview!.rightAnchor, constant: -16),
+            textView.bottomAnchor.constraint(equalTo: textView.superview!.bottomAnchor, constant: 6)
         ]
-        NSLayoutConstraint.activate(textFieldConstraints)
-
-        self.leadingImageView.translatesAutoresizingMaskIntoConstraints = false
-        let leadingImageViewConstraints = [
-            leadingImageView.widthAnchor.constraint(equalToConstant: 20),
-            leadingImageView.heightAnchor.constraint(equalToConstant: 20)
-        ]
-        NSLayoutConstraint.activate(leadingImageViewConstraints)
+        NSLayoutConstraint.activate(textViewConstraints)
     
         self.bottomAreaContentView.translatesAutoresizingMaskIntoConstraints = false
         let bottomAreaContentViewConstraints = [
@@ -494,37 +473,25 @@ extension MKTextField {
         NSLayoutConstraint.activate(errorDescriptionLabelConstraints)
     }
     
-    
     fileprivate func setUI() {
-        self.setTextField()
+        self.setTextView()
         self.setTopAreaUI()
         self.setBottomAreaUI()
         self.updateCounter()
     }
     
-    private func setTextField() {
-        self.textField.placeHolderText = self.options.placeHolder
-        self.textField.delegate = self
-        
-        if let leadingIcon = self.options.leadingIcon {
-            self.leadingImageView.image = leadingIcon
-            self.leadingImageView.isHidden = false
-        }
-        else {
-            self.leadingImageView.isHidden = true
-        }
+    private func setTextView() {
+        self.textView.placeHolderText = self.options.placeHolder
     }
     
     private func setTopAreaUI() {
-        self.topAreaContentView.backgroundColor = .clear
+
         self.titleLabel.text = self.options.title
         self.titleLabel.isHidden = options.title?.isEmpty ?? true
         self.counterLabel.isHidden = !self.options.counter
     }
     
     private func setBottomAreaUI() {
-        self.bottomAreaContentView.backgroundColor = .clear
-        
         if let helperText = self.options.helperText {
             self.helperTextLabel.text = helperText
         }
@@ -532,87 +499,105 @@ extension MKTextField {
         self.errorDescriptionLabel.isHidden = true
     }
     
-}
-
-
-// MARK: - DATA
-extension MKTextField {
-    
-    private func setTextFieldEnable(status: TextFieldStatus) {
-        self.textField.isUserInteractionEnabled = status != .disabled
+    private func setToolBar() {
         
-    }
-}
-// MARK: - TextField
-extension MKTextField {
-    fileprivate func setObservers() {
-        let textField = self.textField
+        var items: [UIBarButtonItem] = []
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        items.append(flexSpace)
+        if self.options.doneAccessory {
+            let done: UIBarButtonItem = UIBarButtonItem(title: "닫기", style: .done, target: self, action: #selector(self.doneButtonAction))
+            items.append(done)
+        }
         
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(textFieldTextDidEndEditing),
-            name: UITextField.textDidEndEditingNotification,
-            object: textField)
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(textFieldTextDidBeginEditing),
-            name: UITextField.textDidBeginEditingNotification,
-            object: textField
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(textFieldTextChanged),
-            name: UITextField.textDidChangeNotification,
-            object: textField
-        )
+        if self.options.clearAccessory {
+            let clear: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(self.clearButtonAction))
+            clear.tintColor = .red
+            items.insert(clear, at: 0)
+        }
         
-        
-    }
-    
-    // MARK: - TextField Editing Observer
-    @objc private func textFieldTextDidBeginEditing(notification : NSNotification) {
-        self.textFieldStatus = .activate
-        self.delegate?.textFieldTextDidBeginEditing?(self)
-    }
-    
-    @objc private func textFieldTextDidEndEditing(notification : NSNotification) {
-        guard let text = self.textField.text else { return }
-        if text.isEmpty {
-            self.textFieldStatus = .normal
+        if !items.isEmpty {
+            self.toolbar.items = items
+            self.toolbar.sizeToFit()
+            self.textView.inputAccessoryView = self.toolbar
         }
         else {
-            if self.textFieldStatus != .error {
-                self.textFieldStatus = .activate
-            }
-            
+            self.textView.inputAccessoryView = nil
         }
-        
-        self.delegate?.textFieldTextDidEndEditing?(self)
     }
     
-    private func validTextFieldLimitted() {
+    @objc func doneButtonAction() {
+        self.textView.resignFirstResponder()
+    }
+    
+    @objc public func clearButtonAction() {
+        self.text = ""
+        self.attributedText = nil
+        self.setHeight()
+        self.delegate?.textViewTextDidChange?(self, text: "")
+        self.isTextCountLimitted = false
+    }
+
+}
+
+// MARK: - DATA
+extension MKTextView {
+    
+    private func settextViewEnable(status: TextViewStatus) {
+        self.textView.isUserInteractionEnabled = status != .disabled
+        
+    }
+}
+// MARK: - textView
+extension MKTextView {
+    fileprivate func setObservers() {
+        let textView = self.textView
+        textView.delegate = self
+
+//        NotificationCenter.default.addObserver(
+//            self,
+//            selector: #selector(textViewTextDidEndEditing),
+//            name: UITextView.textDidEndEditingNotification,
+//            object: textView)
+//        NotificationCenter.default.addObserver(
+//            self,
+//            selector: #selector(textViewTextDidBeginEditing),
+//            name: UITextView.textDidBeginEditingNotification,
+//            object: textView
+//        )
+//        NotificationCenter.default.addObserver(
+//            self,
+//            selector: #selector(textViewTextChanged),
+//            name: UITextView.textDidChangeNotification,
+//            object: textView
+//        )
+    
+    }
+    
+    private func validtextViewLimitted() {
         let inputText = self.text
         let limitCount = options.limitCount
         
         if limitCount != 0 {
-            let isLimmit = inputText.count > limitCount
-            
-            self.isTextCountLimitted = isLimmit
-            self.delegate?.textFieldLimitted?(self, limitted: isLimmit)
-            
+            self.isTextCountLimitted = inputText.count > limitCount
+            self.delegate?.textViewLimitted?(self, limitted: self.isTextCountLimitted)
             if inputText.count > limitCount {
                 let trimmed = String(inputText.prefix(limitCount))
-                self.text = trimmed
+                
+                if !self.textView.attributedText.string.isEmpty {
+                    let attrText = self.textView.attributedText.mutableCopy() as! NSMutableAttributedString
+                    attrText.replaceCharacters(in: NSRange(location: limitCount, length: attrText.length - limitCount), with: "")
+                    self.textView.attributedText = attrText
+                }
+                else {
+                    self.text = trimmed
+                }
+                
+                self.endEditing(true)
+                self.delegate?.textViewTextDidChange?(self, text: self.text)
+                self.setHeight()
             }
             
         }
-    }
-    
-    
-    @objc private func textFieldTextChanged(notifcation: NSNotification) {
-        self.validTextFieldLimitted()
-        self.updateCounter()
-        self.delegate?.textFieldTextDidChange?(self, text: self.text)
     }
     
     private func updateCounter() {
@@ -621,43 +606,87 @@ extension MKTextField {
     }
     
     private func updateStatus() {
-        if self.textField.isFirstResponder {
-            self.textFieldStatus = .activate
+        if self.textView.isFirstResponder {
+            self.textViewStatus = .activate
         }
         else {
-            if self.textField.hasText {
-                self.textFieldStatus = .normal
+            if self.textView.hasText {
+                self.textViewStatus = .normal
             }
             else {
-                self.textFieldStatus = .activate
+                self.textViewStatus = .activate
             }
         }
     }
 }
 
-// MARK: - UITextFieldDelegate
-extension MKTextField: UITextFieldDelegate {
+// MARK: - UITextViewDelegate
+extension MKTextView: UITextViewDelegate {
+//    @objc private func textViewTextDidBeginEditing(notification : NSNotification) {
+//        self.textViewStatus = .focused
+//        self.delegate?.textViewTextDidBeginEditing?(self)
+//    }
+//
+//    @objc private func textViewTextDidEndEditing(notification : NSNotification) {
+//        guard let text = self.textView.text else { return }
+//        if text.isEmpty {
+//            self.textViewStatus = .normal
+//        }
+//        else {
+//            if self.textViewStatus != .error {
+//                self.textViewStatus = .activate
+//            }
+//
+//        }
+//
+//        self.delegate?.textViewTextDidEndEditing?(self)
+//    }
+//
+//    @objc private func textViewTextChanged(notifcation: NSNotification) {
+//        self.validtextViewLimitted()
+//        self.updateCounter()
+//        self.delegate?.textViewTextDidChange?(self, text: self.text)
+//        self.setHeight()
+//    }
     
-    /// Textfield를 직접적으로 Overriding 할 수는 있으나 delegate 로 제공되는 `textFieldShouldReturn` 를 쓰기 권장합니다
-    public func textFieldShouldClear(_ textField: UITextField) -> Bool {
-        let v = self.delegate?.textFieldShouldClear?(self)
-        return v ?? true
-        
+    open func textViewDidChange(_ textView: UITextView) {
+        self.validtextViewLimitted()
+        self.updateCounter()
+        self.delegate?.textViewTextDidChange?(self, text: self.text)
+        self.setHeight()
+
     }
     
-    /// Textfield를 직접적으로 Overriding 할 수는 있으나 delegate 로 제공되는 `textFieldShouldReturn` 를 쓰기 권장합니다
-    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        let v = self.delegate?.textFieldShouldReturn?(self)
-        return v ?? true
+    open func textViewDidBeginEditing(_ textView: UITextView) {
+        self.textViewStatus = .activate
+        self.delegate?.textViewTextDidBeginEditing?(self)
     }
-    
+
+    open func textViewDidEndEditing(_ textView: UITextView) {
+        guard let text = textView.text else { return }
+        if text.isEmpty {
+            self.textViewStatus = .normal
+        }
+        else {
+            if self.textViewStatus != .error {
+                self.textViewStatus = .activate
+            }
+
+        }
+
+        self.delegate?.textViewTextDidEndEditing?(self)
+    }
+
+    open func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        return true
+    }
 }
 
-extension MKTextField {
+extension MKTextView {
     struct Appearance {
-        static let textFieldHeight: CGFloat = 56
+        static let textViewHeight: CGFloat = 48
         static let topAreaHeight: CGFloat = 24
+        static let topBottomMargin: CGFloat = 15
         static let bottomAreaHeight: CGFloat = 28
     }
 }
-
