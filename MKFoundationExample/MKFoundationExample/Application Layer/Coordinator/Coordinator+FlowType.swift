@@ -12,6 +12,7 @@ enum FlowType{
     case textfieldList(_ implementation: TextFieldListCoordinatorImplementation)
     case textViewList(_ implementation: TextViewListCoordinatorImplementation)
     case switchList(_ implementation: SwitchListCoordinatorImplementation)
+    case checkBoxList(_ implementation: CheckBoxListCoordinatorImplementation)
 }
 
 extension BaseCoordinator {
@@ -34,6 +35,9 @@ extension BaseCoordinator {
                 
             case let .switchList(impl):
                 return SwitchListCoordinator(implementation: impl)
+                
+            case let .checkBoxList(impl):
+                return CheckBoxListCoordinator(implementation: impl)
         }
     }
 }
