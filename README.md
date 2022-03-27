@@ -7,7 +7,9 @@
 ## 소개  
 * 개인 프로젝트에서 공통으로 사용되는 Colorset 을 포함, UI Component를 프레임워크화 합니다
 * Colorset에는 다크모드, 라이트 모드를 대응하는 Asset을 포함합니다
-https://github.com/vincent-k-sm/MKFoundation/blob/develop/Images/example_video.mov
+
+https://user-images.githubusercontent.com/24787667/160271811-543a406e-3a2a-4d1a-b076-6c4bbb37d81a.mov
+
 
 ## 목차
  
@@ -47,6 +49,8 @@ https://github.com/vincent-k-sm/MKFoundation/blob/develop/Images/example_video.m
          * [CheckBox Options](#checkbox-options)
          * [CheckBox Delegate](#checkbox-delegate)
          * [CheckBox Usecase](#checkbox-usecase) 
+
+
 
 
 <br>
