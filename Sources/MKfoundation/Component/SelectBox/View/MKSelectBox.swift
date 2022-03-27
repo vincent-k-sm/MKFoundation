@@ -261,7 +261,10 @@ public extension MKSelectBox {
     ///   - tableView: TableView Cell 안에 넣는 경우 적용합니다
     ///   - important:TableView를 넘기지 않는 경우 에러 메시지로 인한 텍스트 높이 변경이 수동으로 이뤄져야 합니다
     
-    func configure(option: MKSelectBoxOptions, tableView: UITableView? = nil) {
+    func configure(
+        option: MKSelectBoxOptions,
+        tableView: UITableView? = nil
+    ) {
         self.tableView = tableView
         self.options = option
         self.placeHolderText = option.placeHolder

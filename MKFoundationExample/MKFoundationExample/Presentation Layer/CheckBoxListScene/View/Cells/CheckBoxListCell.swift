@@ -11,7 +11,6 @@ class CheckBoxListCell: UITableViewCell {
     
     lazy var mkCheckBox: MKCheckBox = {
         let v = MKCheckBox()
-
         return v
     }()
     
