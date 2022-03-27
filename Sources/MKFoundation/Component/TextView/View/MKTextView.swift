@@ -403,10 +403,22 @@ extension MKTextView {
     
     private func setOutline(status: TextViewStatus) {
         if self.options.inputType == .outLine {
-            self.textViewBgView.toCornerRound(corners: [.allCorners], radius: 8.0, borderColor: UIColor.setColorSet(status.outLine), backgroundColor: UIColor.setColorSet(.grey50), borderWidth: 1.0)
+            self.textViewBgView.toCornerRound(
+                corners: [.allCorners],
+                radius: 8.0,
+                borderColor: UIColor.setColorSet(status.outLine),
+                backgroundColor: UIColor.setColorSet(.textfield_bg),
+                borderWidth: 1.0
+            )
         }
         else {
-            self.textViewBgView.toCornerRound(corners: [.allCorners], radius: 8.0, borderColor: UIColor.setColorSet(status.fill.outline), backgroundColor: UIColor.setColorSet(status.fill.background), borderWidth: 1.0)
+            self.textViewBgView.toCornerRound(
+                corners: [.allCorners],
+                radius: 8.0,
+                borderColor: UIColor.setColorSet(status.fill.outline),
+                backgroundColor: UIColor.setColorSet(status.fill.background),
+                borderWidth: 0.5
+            )
         }
     }
     
