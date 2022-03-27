@@ -12,20 +12,18 @@ public extension UIWindow {
     static var key: UIWindow? {
         
         if #available(iOS 13, *) {
+            var window = UIApplication.shared.windows.first { $0.isKeyWindow }
             if #available(iOS 15, *) {
-                return UIApplication.shared.connectedScenes
-                // Keep only active scenes, onscreen and visible to the user
-                    .filter { $0.activationState == .foregroundActive || $0.activationState == .foregroundInactive }
-                // Keep only the first `UIWindowScene`
-                    .first(where: { $0 is UIWindowScene })
-                // Get its associated windows
-                    .flatMap({ $0 as? UIWindowScene })?.windows
-                // Finally, keep only the key window
-                    .first(where: \.isKeyWindow)
+                if let sceneWindow = UIApplication.shared.connectedScenes
+                    .compactMap({ $0 as? UIWindowScene})
+                    .flatMap({ $0.windows })
+                    .first(where: { $0.isKeyWindow }) {
+                    window = sceneWindow
+                }
+                
             }
-            else {
-                return UIApplication.shared.windows.first { $0.isKeyWindow }
-            }
+
+            return window
             
         }
         else {
