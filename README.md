@@ -13,6 +13,7 @@ https://user-images.githubusercontent.com/24787667/160271811-543a406e-3a2a-4d1a-
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Features](#features)
+- [Todo](#todo)
 
 <br>
 
@@ -20,7 +21,7 @@ https://user-images.githubusercontent.com/24787667/160271811-543a406e-3a2a-4d1a-
 
 | Platform | Minimum Swift Version | Installation | Status |
 | --- | --- | --- | --- |
-| iOS 12.0+ / macOS 11.0+ | 5.0 | [Swift Package Manager](#swift-package-manager), [Manual](#manually) | Fully Tested |
+| iOS 13.0+ / macOS 11.0+ | 5.0 | [Swift Package Manager](#swift-package-manager), [Manual](#manually) | Fully Tested |
 
 <br>
 
@@ -652,3 +653,13 @@ let option = MKCheckBoxOptions(
 mkCheckBox.configure(option: option)
 ```
 ---
+
+<br>
+
+## Todo 
+
+* [ ] alignTextBelow
+    - [ ] iOS 15에서 추가된 `UIButton.Configuration` 대응
+* [ ] updateTitleText
+    * [ ] 내부에서 SetTitle에 자동으로 처리하도록 개선 필요
+* [ ] 각 Foundation 의 속성값을 유동적으로 조정할 수 있도록 enum 에서 struct 로 변경
