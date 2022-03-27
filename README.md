@@ -31,17 +31,17 @@ https://user-images.githubusercontent.com/24787667/160271811-543a406e-3a2a-4d1a-
 
 The [Swift Package Manager](https://swift.org/package-manager/) is a tool for automating the distribution of Swift code and is integrated into the `swift` compiler. 
 
-Once you have your Swift package set up, adding Alamofire as a dependency is as easy as adding it to the `dependencies` value of your `Package.swift`.
+Once you have your Swift package set up, adding MKFoundation as a dependency is as easy as adding it to the `dependencies` value of your `Package.swift`.
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/vincent-k-sm/MKFoundation", .upToNextMajor(from: "1.0.0"))
+    .package(url: "https://github.com/vincent-k-sm/MKFoundation", .upToNextMajor(from: "1.0.3"))
 ]
 ```
 
 ### Manually
 
-If you prefer not to use any of the aforementioned dependency managers, you can integrate Alamofire into your project manually.
+If you prefer not to use any of the aforementioned dependency managers, you can integrate MKFoundation into your project manually.
 
 #### Embedded Framework
 
@@ -51,7 +51,7 @@ If you prefer not to use any of the aforementioned dependency managers, you can 
   $ git init
   ```
 
-- Add Alamofire as a git [submodule](https://github.com/vincent-k-sm/MKFoundation) by running the following command:
+- Add MKFoundation as a git [submodule](https://github.com/vincent-k-sm/MKFoundation) by running the following command:
 
   ```bash
   $ git submodule add https://github.com/vincent-k-sm/MKFoundation
