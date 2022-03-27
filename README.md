@@ -20,7 +20,7 @@ https://user-images.githubusercontent.com/24787667/160271811-543a406e-3a2a-4d1a-
 
 | Platform | Minimum Swift Version | Installation | Status |
 | --- | --- | --- | --- |
-| iOS 12.0+ / macOS 11.0+ | 5.0 | [Swift Package Manager](#swift-package-manager), [Manual](#manually) | Fully Tested |
+| iOS 13.0+ / macOS 11.0+ | 5.0 | [Swift Package Manager](#swift-package-manager), [Manual](#manually) | Fully Tested |
 
 <br>
 
