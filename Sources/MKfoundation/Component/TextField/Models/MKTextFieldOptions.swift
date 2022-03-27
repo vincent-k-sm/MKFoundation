@@ -10,7 +10,7 @@ import UIKit
 /// - Parameters:
 ///   - placeHolder: placeholer text
 ///   - limitCount: 최대 글자 수
-///   - autoLimitCountErrorMessage: 최대 글자수 도달 시 자동으로 에러 출력
+///   - autoLimitCountErrorMessage: 최대 글자수 도달 시 해당 메시지로 에러가 설정됩니다
 ///   - title: 텍스트 필드 제목 영역 입니다 적용 시 최대 높이가 변경됩니다
 ///   - helperText: 하단 설명 영역입니다 적용 시 최대 높이가 변경됩니다
 ///   - counter: 상단 카운트 설정 여부입니다 적용 시 최대 높이가 변경됩니다

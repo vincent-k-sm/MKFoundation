@@ -6,10 +6,10 @@
 import Foundation
 
 @objc public enum TextViewStatus: Int, CaseIterable {
-    case normal // inActivate 인풋이 채워지지 않은 상태
-    case activate // 인풋이 채워진 상태
-    case error
-    case disabled
+    case normal // 기본 상태
+    case activate // Focused 상태
+    case error // 에러
+    case disabled // 비 활성화
     
     public var info: String {
         switch self {

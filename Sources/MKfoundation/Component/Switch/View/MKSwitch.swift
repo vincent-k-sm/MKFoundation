@@ -6,7 +6,7 @@
 import Foundation
 import UIKit
 
-public class MKSwitch: UIView {
+open class MKSwitch: UIView {
     
     @IBInspectable public var isOn: Bool = false {
         didSet {
@@ -62,10 +62,6 @@ public class MKSwitch: UIView {
         commonInit()
     }
     
-    public override func awakeFromNib() {
-        commonInit()
-    }
-    
     private func commonInit() {
         self.setUI()
         self.initLayout()
@@ -82,7 +78,7 @@ public class MKSwitch: UIView {
         button.layer.cornerRadius = button.bounds.height / 2
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     

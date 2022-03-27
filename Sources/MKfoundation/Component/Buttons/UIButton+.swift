@@ -7,7 +7,10 @@ import UIKit
 public extension UIButton {
     /// [MKFoundation]
     /// 버튼 배경 색 설정
-    func setBackgroundColor(_ color: UIColor, for state: UIControl.State) {
+    func setBackgroundColor(
+        _ color: UIColor,
+        for state: UIControl.State
+    ) {
         UIGraphicsBeginImageContext(CGSize(width: 1.0, height: 1.0))
         guard let context = UIGraphicsGetCurrentContext() else { return }
         context.setFillColor(color.cgColor)
@@ -21,7 +24,9 @@ public extension UIButton {
 
     /// [MKFoundation]
     /// 버튼에 들어가는 이미지와 타이틀 간 간격 조정
-    func alignTextBelow(spacing: CGFloat = 2.0) {
+    func alignTextBelow(
+        spacing: CGFloat = 2.0
+    ) {
         guard let image = self.imageView?.image else {
             return
         }
