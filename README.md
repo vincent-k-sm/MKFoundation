@@ -10,45 +10,100 @@
 
 https://user-images.githubusercontent.com/24787667/160271811-543a406e-3a2a-4d1a-b076-6c4bbb37d81a.mov
 
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Features](#features)
 
-## 목차
- 
-- MKFoundation Features
-    * [Buttons](#buttons)
-        * [Button Types](#buttontypes)
-        * [Button Size](#buttonsizes)
-        * [Button Methods](#button-methods)
-        * [Button Use Case](#button-use-case)
-    * [Colors](#colors)
-        * [Asset Colors](#asset-colors)
-        * [Color Methods](#color-methods)
-        * [Color Use Case](#color-use-case)
-     * [Textview](#textview)
-         * [Textview Types](#textview-types)
-         * [Textview Status](#textview-status)
-         * [Textview Options](#textview-options)
-         * [Textview Delegate](#textview-delegate)
-         * [Textview Usecase](#textview-usecase)
-     * [Textfield](#textfield)
-         * [Textfield Types](#textfield-types)
-         * [Textfield Status](#textfield-status)
-         * [Textfield Options](#textfield-options)
-         * [Textfield Delegate](#textfield-delegate)
-         * [Textfield Usecase](#textfield-usecase)
-     * [SelectBox](#selectbox)
-         * [SelectBox Types](#selectbox-types)
-         * [SelectBox Status](#selectbox-status)
-         * [SelectBox Options](#selectbox-options)
-         * [SelectBox Delegate](#selectbox-delegate)
-         * [SelectBox Usecase](#selectbox-usecase)
-     * [Switch](#switch)
-         * [Switch Contants](#switch-contants)
-         * [Switch Delegate](#switch-delegate)
-         * [Switch Usecase](#switch-usecase) 
-     * [CheckBox](#checkbox)
-         * [CheckBox Options](#checkbox-options)
-         * [CheckBox Delegate](#checkbox-delegate)
-         * [CheckBox Usecase](#checkbox-usecase) 
+<br>
+
+## Requirements
+
+| Platform | Minimum Swift Version | Installation | Status |
+| --- | --- | --- | --- |
+| iOS 12.0+ / macOS 11.0+ | 5.0 | [Swift Package Manager](#swift-package-manager), [Manual](#manually) | Fully Tested |
+
+<br>
+
+## Installation
+
+### Swift Package Manager
+
+The [Swift Package Manager](https://swift.org/package-manager/) is a tool for automating the distribution of Swift code and is integrated into the `swift` compiler. 
+
+Once you have your Swift package set up, adding Alamofire as a dependency is as easy as adding it to the `dependencies` value of your `Package.swift`.
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/vincent-k-sm/MKFoundation", .upToNextMajor(from: "1.0.0"))
+]
+```
+
+### Manually
+
+If you prefer not to use any of the aforementioned dependency managers, you can integrate Alamofire into your project manually.
+
+#### Embedded Framework
+
+- Open up Terminal, `cd` into your top-level project directory, and run the following command "if" your project is not initialized as a git repository:
+
+  ```bash
+  $ git init
+  ```
+
+- Add Alamofire as a git [submodule](https://github.com/vincent-k-sm/MKFoundation) by running the following command:
+
+  ```bash
+  $ git submodule add https://github.com/vincent-k-sm/MKFoundation
+  ```
+    > After download We Suggest Remove `Example` Folder When Embed
+
+- Click on the `+` button under th Frameworks, Libraries, and Embedded Content
+- Click on the `Add Other` and Select in `MKFoundation` folder
+- Drag the `MKFoundation` folder into the Project Navigator of your application's Xcode project.
+
+    > It should appear nested underneath your application's blue project icon. Whether it is above or below all the other Xcode groups does not matter.
+    
+- And that's it!
+
+<br>
+
+## Features
+
+* [x] [Buttons](#buttons)
+    * [Button Types](#buttontypes)
+    * [Button Size](#buttonsizes)
+    * [Button Methods](#button-methods)
+    * [Button Use Case](#button-use-case)
+* [x] [Colors](#colors)
+    * [Asset Colors](#asset-colors)
+    * [Color Methods](#color-methods)
+    * [Color Use Case](#color-use-case)
+* [x] [Textview](#textview)
+    * [Textview Types](#textview-types)
+    * [Textview Status](#textview-status)
+    * [Textview Options](#textview-options)
+    * [Textview Delegate](#textview-delegate)
+    * [Textview Usecase](#textview-usecase)
+* [x] [Textfield](#textfield)
+    * [Textfield Types](#textfield-types)
+    * [Textfield Status](#textfield-status)
+    * [Textfield Options](#textfield-options)
+    * [Textfield Delegate](#textfield-delegate)
+    * [Textfield Usecase](#textfield-usecase)
+* [x] [SelectBox](#selectbox)
+    * [SelectBox Types](#selectbox-types)
+    * [SelectBox Status](#selectbox-status)
+    * [SelectBox Options](#selectbox-options)
+    * [SelectBox Delegate](#selectbox-delegate)
+    * [SelectBox Usecase](#selectbox-usecase)
+* [x] [Switch](#switch)
+    * [Switch Contants](#switch-contants)
+    * [Switch Delegate](#switch-delegate)
+    * [Switch Usecase](#switch-usecase) 
+* [x] [CheckBox](#checkbox)
+    * [CheckBox Options](#checkbox-options)
+    * [CheckBox Delegate](#checkbox-delegate)
+    * [CheckBox Usecase](#checkbox-usecase) 
 
 
 
@@ -116,7 +171,7 @@ func alignTextBelow(
 ---
 * updateTitleText
     * Foundation으로 Title 없이 설정한 버튼의 Title만 Update하고자 하는 경우 사용할 수 있습니다
-        * - [ ] 내부에서 SetTitle에 자동으로 처리하도록 개선이 필요합니다
+        * [ ] 내부에서 SetTitle에 자동으로 처리하도록 개선이 필요합니다
 ```swift
  func updateTitleText(
      text: String,
