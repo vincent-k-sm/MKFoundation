@@ -181,11 +181,8 @@ struct ${VIEWMODEL_NAME}Input {
     
 }
 
-struct ${VIEWMODEL_NAME}Action {
-    
-}
 
-class ${VIEWMODEL_NAME}: BaseViewModel<${VIEWMODEL_NAME}Input, ${VIEWMODEL_NAME}Action> {
+class ${VIEWMODEL_NAME}: BaseViewModel<${VIEWMODEL_NAME}Input, ${COORDINATOR_NAME}Action> {
  
     // MARK: - Private Properties
     
@@ -246,7 +243,6 @@ class ${COORDINATOR_NAME}: BaseCoordinator {
     private let implementation: ${COORDINATOR_NAME}Implementation
     
     var inputs: ${VIEWMODEL_NAME}Input!
-    var actions: ${VIEWMODEL_NAME}Action!
 
     init(implementation: ${COORDINATOR_NAME}Implementation) {
         self.implementation = implementation
@@ -261,14 +257,8 @@ class ${COORDINATOR_NAME}: BaseCoordinator {
         self.inputs = ${VIEWMODEL_NAME}Input(
         )
     }
-    
-    override func setActions() {
-        self.actions = ${VIEWMODEL_NAME}Action(
-        )
-    }
-    
     override func start() {
-        let vc = self.createViewController(input: self.inputs, actions: self.actions)
+        let vc = self.createViewController(input: self.inputs)
         // self.pushVC(vc, completion: nil)
 
     }
@@ -277,17 +267,15 @@ class ${COORDINATOR_NAME}: BaseCoordinator {
 
 protocol ${COORDINATOR_NAME}Injection {
     func createViewController(
-        input: ${VIEWMODEL_NAME}Input!,
-        actions: ${VIEWMODEL_NAME}Action!
+        input: ${VIEWMODEL_NAME}Input!
     ) -> ${VIEW_NAME}
 }
 
 extension ${COORDINATOR_NAME}: ${COORDINATOR_NAME}Injection {
     func createViewController(
-        input: ${VIEWMODEL_NAME}Input!,
-        actions: ${VIEWMODEL_NAME}Action!
+        input: ${VIEWMODEL_NAME}Input!
     ) -> ${VIEW_NAME} {
-        let viewModel = ${VIEWMODEL_NAME}(input: inputs, actions: actions)
+        let viewModel = ${VIEWMODEL_NAME}(input: inputs, actions: self)
         let vc = ${VIEW_NAME}(viewModel: viewModel)
         return vc
     }
